@@ -3,15 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/DA1/QLNXK/src/UI/TCT.java</file>
-            <file>file:/D:/DA1/QLNXK/src/DAO/ColourDAO.java</file>
-            <file>file:/D:/DA1/QLNXK/src/UI/Main.java</file>
-            <file>file:/D:/DA1/QLNXK/src/Model/Producer.java</file>
-            <file>file:/D:/DA1/QLNXK/src/DAO/ProducerDAO.java</file>
-            <file>file:/D:/DA1/QLNXK/src/DAO/PhoneNameDAO.java</file>
-            <file>file:/D:/DA1/QLNXK/src/UI/MSP.java</file>
-            <file>file:/D:/DA1/QLNXK/src/DAO/MemoryDAO.java</file>
-            <file>file:/D:/DA1/QLNXK/src/Model/PhoneName.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/MSP.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/Main.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/TCT.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/DAO/GUIDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/DAO/TypeDAO.java</file>
         </group>
     </open-files>
 </project-private>

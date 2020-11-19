@@ -9,6 +9,7 @@ import DAO.ColourDAO;
 import DAO.MemoryDAO;
 import DAO.PhoneNameDAO;
 import DAO.ProducerDAO;
+import DAO.TypeDAO;
 import Model.Colour;
 import Model.Memory;
 import Model.PhoneName;
@@ -16,8 +17,10 @@ import Model.Producer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -29,7 +32,9 @@ public class MSP extends javax.swing.JPanel {
     private ArrayList<PhoneName> pn;
     private ArrayList<Memory> mmr;
     private ArrayList<Colour> cl;
+    private ArrayList detail;
     private DefaultComboBoxModel thModel, pnModel, mModel, bntModel, bnrModel, romtModel, ramtModel;
+    private DefaultTableModel model;
 
     /**
      * Creates new form M
@@ -37,6 +42,7 @@ public class MSP extends javax.swing.JPanel {
     public MSP() {
         initComponents();
         loadPanelData();
+        model = (DefaultTableModel) tblData.getModel();
     }
 
     /**
@@ -573,7 +579,23 @@ public class MSP extends javax.swing.JPanel {
         };
     }
 
-    private void fillTable(int start, int end) {
+    private void fillTable(int page) {
+        int start = page * 10 - 10, end;
+        detail = (new TypeDAO()).getAllDetail(rdoHD.isSelected() ? "KD" : "NB");
+        if (end < detail.size() - 1) {
+            end = detail.size() - 1;
+        }
+        if (detail.size() > 0) {
+            model.setRowCount(0);
+            for (int i = start; i < end; i++) {
+                model.addRow(new Object[]{(String) ((ArrayList) detail.get(i)).get(0),
+                    (String) ((ArrayList) detail.get(i)).get(0),
+                    (int) ((ArrayList) detail.get(i)).get(0),
+                    (Date) ((ArrayList) detail.get(i)).get(0),
+                    (Date) ((ArrayList) detail.get(i)).get(0),});
+            }
+            model.fireTableDataChanged();
+        }
     }
 
     private void loadPanelData() {
@@ -581,6 +603,7 @@ public class MSP extends javax.swing.JPanel {
         showMemory();
         showColour();
         cboTH.setSelectedIndex(0);
+        fillTable(0, 10);
     }
 
     private void addCT(int openTab) {
