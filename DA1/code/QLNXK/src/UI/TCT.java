@@ -14,9 +14,15 @@ public class TCT extends javax.swing.JDialog {
     /**
      * Creates new form TCT
      */
-    public TCT(java.awt.Frame parent, boolean modal) {
+    public TCT(java.awt.Frame parent, boolean modal, int openTab) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
+        jtpTab.setSelectedIndex(openTab);
+    }
+
+    public TCT(java.awt.Frame parent, boolean modal) {
+        this(parent, modal, 0);
     }
 
     /**
@@ -30,7 +36,7 @@ public class TCT extends javax.swing.JDialog {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         buttonGroup2 = new javax.swing.ButtonGroup();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jtpTab = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -321,7 +327,7 @@ public class TCT extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Thương Hiệu", jPanel1);
+        jtpTab.addTab("Thương Hiệu", jPanel1);
 
         jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder("Tên điện thoại"));
 
@@ -526,7 +532,7 @@ public class TCT extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Tên Máy", jPanel7);
+        jtpTab.addTab("Tên Máy", jPanel7);
 
         jPanel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Bộ nhớ"));
 
@@ -693,7 +699,7 @@ public class TCT extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Bộ Nhớ", jPanel10);
+        jtpTab.addTab("Bộ Nhớ", jPanel10);
 
         jPanel14.setBorder(javax.swing.BorderFactory.createTitledBorder("Thương hiệu"));
 
@@ -857,17 +863,17 @@ public class TCT extends javax.swing.JDialog {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab("Màu", jPanel13);
+        jtpTab.addTab("Màu", jPanel13);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jtpTab, javax.swing.GroupLayout.PREFERRED_SIZE, 560, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(jtpTab, javax.swing.GroupLayout.PREFERRED_SIZE, 650, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -986,7 +992,7 @@ public class TCT extends javax.swing.JDialog {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jtpTab;
     private javax.swing.JLabel lblPosBN;
     private javax.swing.JLabel lblPosM;
     private javax.swing.JLabel lblPosMau;

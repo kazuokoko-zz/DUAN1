@@ -241,6 +241,9 @@
               <Image iconType="3" name="/LIB/ICON/Add.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTTHActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cboTM">
           <Properties>
@@ -263,6 +266,9 @@
               <Image iconType="3" name="/LIB/ICON/Add.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTTMActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cboRom">
           <Properties>
@@ -285,6 +291,9 @@
               <Image iconType="3" name="/LIB/ICON/Add.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTBNActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnTBN1">
           <Properties>
@@ -292,6 +301,9 @@
               <Image iconType="3" name="/LIB/ICON/Add.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTBN1ActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnTM">
           <Properties>
@@ -299,6 +311,9 @@
               <Image iconType="3" name="/LIB/ICON/Add.png"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnTMActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnLuu">
           <Properties>

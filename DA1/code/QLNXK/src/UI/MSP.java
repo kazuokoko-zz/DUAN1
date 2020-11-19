@@ -13,8 +13,11 @@ import Model.Colour;
 import Model.Memory;
 import Model.PhoneName;
 import Model.Producer;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
 
 /**
  *
@@ -26,17 +29,14 @@ public class MSP extends javax.swing.JPanel {
     private ArrayList<PhoneName> pn;
     private ArrayList<Memory> mmr;
     private ArrayList<Colour> cl;
-    private DefaultComboBoxModel thModel, pnModel, mModel, bntModel, bnrModel;
+    private DefaultComboBoxModel thModel, pnModel, mModel, bntModel, bnrModel, romtModel, ramtModel;
 
     /**
      * Creates new form M
      */
     public MSP() {
         initComponents();
-        showTH();
-        showMemory();
-        showColour();
-        cboTH.setSelectedIndex(0);
+        loadPanelData();
     }
 
     /**
@@ -125,18 +125,43 @@ public class MSP extends javax.swing.JPanel {
         });
 
         btnTTH.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
+        btnTTH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTTHActionPerformed(evt);
+            }
+        });
 
         cboTM.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnTTM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
+        btnTTM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTTMActionPerformed(evt);
+            }
+        });
 
         cboRom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnTBN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
+        btnTBN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTBNActionPerformed(evt);
+            }
+        });
 
         btnTBN1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
+        btnTBN1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTBN1ActionPerformed(evt);
+            }
+        });
 
         btnTM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
+        btnTM.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTMActionPerformed(evt);
+            }
+        });
 
         btnLuu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Save.png"))); // NOI18N
         btnLuu.setText("Lưu");
@@ -419,6 +444,31 @@ public class MSP extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_cboTHItemStateChanged
 
+    private void btnTTHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTHActionPerformed
+        // TODO add your handling code here:
+        addCT(0);
+    }//GEN-LAST:event_btnTTHActionPerformed
+
+    private void btnTTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTTMActionPerformed
+        // TODO add your handling code here:
+        addCT(1);
+    }//GEN-LAST:event_btnTTMActionPerformed
+
+    private void btnTBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTBNActionPerformed
+        // TODO add your handling code here:
+        addCT(2);
+    }//GEN-LAST:event_btnTBNActionPerformed
+
+    private void btnTBN1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTBN1ActionPerformed
+        // TODO add your handling code here:
+        addCT(2);
+    }//GEN-LAST:event_btnTBN1ActionPerformed
+
+    private void btnTMActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTMActionPerformed
+        // TODO add your handling code here:
+        addCT(3);
+    }//GEN-LAST:event_btnTMActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack2;
@@ -503,14 +553,45 @@ public class MSP extends javax.swing.JPanel {
     private void showMemory() {
         bntModel = new DefaultComboBoxModel();
         bnrModel = new DefaultComboBoxModel();
+        romtModel = new DefaultComboBoxModel();
+        ramtModel = new DefaultComboBoxModel();
         cboRom.setModel(bntModel);
         cboRam.setModel(bnrModel);
+        cboRomT.setModel(romtModel);
+        cboRamT.setModel(ramtModel);
         bntModel.removeAllElements();
         bnrModel.removeAllElements();
+        romtModel.removeAllElements();
+        ramtModel.removeAllElements();
         mmr = new MemoryDAO().selectAll();
         for (Memory t : mmr) {
             bntModel.addElement(t);
             bnrModel.addElement(t);
+            romtModel.addElement(t);
+            ramtModel.addElement(t);
+
         };
+    }
+
+    private void fillTable(int start, int end) {
+    }
+
+    private void loadPanelData() {
+        showTH();
+        showMemory();
+        showColour();
+        cboTH.setSelectedIndex(0);
+    }
+
+    private void addCT(int openTab) {
+        TCT tct = new TCT((JFrame) this.getTopLevelAncestor(), true, openTab);
+        tct.setVisible(true);
+        tct.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent we) {
+                loadPanelData();
+            }
+
+        });
     }
 }
