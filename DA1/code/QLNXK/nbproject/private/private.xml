@@ -4,10 +4,14 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/D:/Git/DA1/code/QLNXK/src/UI/MSP.java</file>
-            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/Main.java</file>
             <file>file:/D:/Git/DA1/code/QLNXK/src/UI/TCT.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/DAO/AreaDAO.java</file>
             <file>file:/D:/Git/DA1/code/QLNXK/src/DAO/GUIDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/DN.java</file>
             <file>file:/D:/Git/DA1/code/QLNXK/src/DAO/TypeDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/QLK.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/TKV.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK/src/UI/NCC.java</file>
         </group>
     </open-files>
 </project-private>

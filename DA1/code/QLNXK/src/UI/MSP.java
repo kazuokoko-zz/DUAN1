@@ -17,7 +17,6 @@ import Model.Producer;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
-import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
@@ -80,13 +79,13 @@ public class MSP extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         tblData = new javax.swing.JTable();
         jLabel16 = new javax.swing.JLabel();
-        btnHome2 = new javax.swing.JButton();
-        lblPos2 = new javax.swing.JLabel();
-        btnBack2 = new javax.swing.JButton();
-        btnNext2 = new javax.swing.JButton();
-        btnEnd2 = new javax.swing.JButton();
-        txtPos2 = new javax.swing.JTextField();
-        btnGo2 = new javax.swing.JButton();
+        btnHome = new javax.swing.JButton();
+        lblPos = new javax.swing.JLabel();
+        btnBack = new javax.swing.JButton();
+        btnNext = new javax.swing.JButton();
+        btnEnd = new javax.swing.JButton();
+        txtPos = new javax.swing.JTextField();
+        btnGo = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtTimT = new javax.swing.JTextField();
         btnTim = new javax.swing.JButton();
@@ -271,17 +270,17 @@ public class MSP extends javax.swing.JPanel {
 
         tblData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Mã máy", "Tên máy", "Số lượng", "Ngày nhập gần nhất", "Ngày Xuất gân nhất"
+                "Mã máy", "Tên máy", "Số lượng"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false
+                false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -293,23 +292,23 @@ public class MSP extends javax.swing.JPanel {
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Trang:");
 
-        btnHome2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
+        btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
 
-        lblPos2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        lblPos2.setForeground(new java.awt.Color(255, 0, 51));
-        lblPos2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPos2.setText("1/1");
+        lblPos.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        lblPos.setForeground(new java.awt.Color(255, 0, 51));
+        lblPos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPos.setText("1/1");
 
-        btnBack2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/back.png"))); // NOI18N
+        btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/back.png"))); // NOI18N
 
-        btnNext2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Next.png"))); // NOI18N
+        btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Next.png"))); // NOI18N
 
-        btnEnd2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/end.png"))); // NOI18N
+        btnEnd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/end.png"))); // NOI18N
 
-        txtPos2.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtPos2.setText("1");
+        txtPos.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPos.setText("1");
 
-        btnGo2.setText("Đi đến");
+        btnGo.setText("Đi đến");
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Tên máy");
@@ -370,19 +369,19 @@ public class MSP extends javax.swing.JPanel {
                             .addGroup(jPanel7Layout.createSequentialGroup()
                                 .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnHome2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnBack2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblPos2, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblPos, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnNext2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnEnd2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtPos2, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtPos, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnGo2)))
+                                .addComponent(btnGo)))
                         .addGap(0, 21, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -406,13 +405,13 @@ public class MSP extends javax.swing.JPanel {
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 268, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnGo2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtPos2, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lblPos2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnHome2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnBack2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnNext2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnEnd2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtPos, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblPos, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnHome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBack, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnNext, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEnd, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -477,12 +476,12 @@ public class MSP extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBack2;
-    private javax.swing.JButton btnEnd2;
-    private javax.swing.JButton btnGo2;
-    private javax.swing.JButton btnHome2;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnEnd;
+    private javax.swing.JButton btnGo;
+    private javax.swing.JButton btnHome;
     private javax.swing.JButton btnLuu;
-    private javax.swing.JButton btnNext2;
+    private javax.swing.JButton btnNext;
     private javax.swing.JButton btnTBN;
     private javax.swing.JButton btnTBN1;
     private javax.swing.JButton btnTM;
@@ -512,11 +511,11 @@ public class MSP extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel lblPos2;
+    private javax.swing.JLabel lblPos;
     private javax.swing.JRadioButton rdoHD;
     private javax.swing.JRadioButton rdoTC;
     private javax.swing.JTable tblData;
-    private javax.swing.JTextField txtPos2;
+    private javax.swing.JTextField txtPos;
     private javax.swing.JTextField txtSTK;
     private javax.swing.JTextField txtTimT;
     // End of variables declaration//GEN-END:variables
@@ -582,17 +581,15 @@ public class MSP extends javax.swing.JPanel {
     private void fillTable(int page) {
         int start = page * 10 - 10, end = 10 * page - 1;
         detail = (new TypeDAO()).getAllDetail(rdoHD.isSelected() ? "KD" : "NB");
-        if (end < detail.size() - 1) {
+        if (end > detail.size() - 1) {
             end = detail.size() - 1;
         }
         if (detail.size() > 0) {
             model.setRowCount(0);
-            for (int i = start; i < end; i++) {
+            for (int i = start; i <= end; i++) {
                 model.addRow(new Object[]{(String) ((ArrayList) detail.get(i)).get(0),
                     (String) ((ArrayList) detail.get(i)).get(0),
-                    (int) ((ArrayList) detail.get(i)).get(0),
-                    (Date) ((ArrayList) detail.get(i)).get(0),
-                    (Date) ((ArrayList) detail.get(i)).get(0),});
+                    (int) ((ArrayList) detail.get(i)).get(0)});
             }
             model.fireTableDataChanged();
         }

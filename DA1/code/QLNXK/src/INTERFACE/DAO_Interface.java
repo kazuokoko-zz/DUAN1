@@ -19,7 +19,7 @@ public interface DAO_Interface<E> {
      *
      * @param e - đối tượng cần thêm
      */
-    public void insert(E e);
+    public  void insert(E e);
 
     /**
      * cập nhật dữ liệu vào database

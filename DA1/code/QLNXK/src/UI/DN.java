@@ -52,7 +52,7 @@ public class DN extends javax.swing.JDialog {
 
         jLabel3.setText("Mật khẩu (*)");
 
-        txtPass.setEchoChar('.');
+        txtPass.setEchoChar('+');
 
         btnDN.setText("Đăng nhập");
 
