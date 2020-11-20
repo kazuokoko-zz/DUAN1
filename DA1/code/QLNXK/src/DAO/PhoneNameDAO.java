@@ -20,17 +20,17 @@ import java.util.ArrayList;
 public class PhoneNameDAO implements DAO_Interface<PhoneName> {
 
     @Override
-    public void insert(PhoneName e) {
+    public boolean insert(PhoneName e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(PhoneName e) {
+    public boolean update(PhoneName e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(PhoneName e) {
+    public boolean dalete(PhoneName e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

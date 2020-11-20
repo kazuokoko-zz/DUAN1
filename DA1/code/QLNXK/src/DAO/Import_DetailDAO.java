@@ -16,17 +16,17 @@ import java.util.ArrayList;
 public class Import_DetailDAO implements DAO_Interface<Import_Detail> {
 
     @Override
-    public void insert(Import_Detail e) {
+    public boolean insert(Import_Detail e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Import_Detail e) {
+    public boolean update(Import_Detail e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Import_Detail e) {
+    public boolean dalete(Import_Detail e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -19,17 +19,17 @@ import java.util.ArrayList;
 public class ColourDAO implements DAO_Interface<Colour> {
 
     @Override
-    public void insert(Colour e) {
+    public boolean insert(Colour e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Colour e) {
+    public boolean update(Colour e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Colour e) {
+    public boolean dalete(Colour e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

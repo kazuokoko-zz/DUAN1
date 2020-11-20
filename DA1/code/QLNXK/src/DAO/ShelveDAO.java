@@ -16,17 +16,17 @@ import java.util.ArrayList;
 public class ShelveDAO implements DAO_Interface<Shelve>{
 
     @Override
-    public void insert(Shelve e) {
+    public boolean insert(Shelve e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Shelve e) {
+    public boolean update(Shelve e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Shelve e) {
+    public boolean dalete(Shelve e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

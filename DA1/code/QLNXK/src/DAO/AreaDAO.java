@@ -18,18 +18,68 @@ import java.util.ArrayList;
 public class AreaDAO implements DAO_Interface<Area> {
 
     @Override
-    public void insert(Area e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean insert(Area e) {
+        String sql = "insert into Areas(id,name,stat)\n"
+                + "values(?,?,?)";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, e.getId());
+            stm.setNString(2, e.getName());
+            stm.setNString(3, e.getStat());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
-    public void update(Area e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean update(Area e) {
+        String sql = "update areas\n"
+                + "set name = ?\n"
+                + "where id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, e.getName());
+            stm.setNString(2, e.getId());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
-    public void dalete(Area e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean dalete(Area e) {
+        String sql = "update areas\n"
+                + "set stat = N'DA'\n"
+                + "where id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, e.getId());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception ex) {
+            return false;
+        }
     }
 
     @Override
@@ -54,8 +104,8 @@ public class AreaDAO implements DAO_Interface<Area> {
             PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
             String name = (byname ? "%".concat(find).concat("%") : "%");
             String id = (byname ? "%" : "%".concat(find).concat("%"));
-            stm.setNString(1, isfind ? name : "%");
-            stm.setNString(2, isfind ? id : "%");
+            stm.setNString(1, isfind ? id : "%");
+            stm.setNString(2, isfind ? name : "%");
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
                 l.add(new Area(rs.getNString("id"), rs.getNString("name"), rs.getNString("stat")));

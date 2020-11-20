@@ -105,7 +105,9 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="txtPass">
       <Properties>
-        <Property name="echoChar" type="char" value="+"/>
+        <Property name="echoChar" type="char" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="&apos;+&apos;" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnDN">

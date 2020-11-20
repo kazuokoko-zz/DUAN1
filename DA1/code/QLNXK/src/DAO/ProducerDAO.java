@@ -19,17 +19,17 @@ import java.util.ArrayList;
 public class ProducerDAO implements DAO_Interface<Producer> {
 
     @Override
-    public void insert(Producer e) {
+    public boolean insert(Producer e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Producer e) {
+    public boolean update(Producer e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Producer e) {
+    public boolean dalete(Producer e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

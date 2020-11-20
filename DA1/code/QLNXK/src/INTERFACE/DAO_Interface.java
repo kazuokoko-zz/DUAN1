@@ -19,21 +19,21 @@ public interface DAO_Interface<E> {
      *
      * @param e - đối tượng cần thêm
      */
-    public  void insert(E e);
+    public  boolean insert(E e);
 
     /**
      * cập nhật dữ liệu vào database
      *
      * @param e - đối tượng cần cập nhật
      */
-    public void update(E e);
+    public boolean update(E e);
 
     /**
      * xóa dữ liệu trong database
      *
      * @param e - đối tượng cần xóa
      */
-    public void dalete(E e);
+    public boolean dalete(E e);
 
     /**
      * thêm dữ liệu vào database

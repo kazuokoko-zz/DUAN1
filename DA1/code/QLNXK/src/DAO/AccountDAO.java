@@ -21,17 +21,17 @@ public class AccountDAO implements DAO_Interface<Account> {
     }
 
     @Override
-    public void insert(Account e) {
+    public boolean insert(Account e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Account e) {
+    public boolean update(Account e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Account e) {
+    public boolean dalete(Account e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

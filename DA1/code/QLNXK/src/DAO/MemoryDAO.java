@@ -19,17 +19,17 @@ import java.util.ArrayList;
 public class MemoryDAO implements DAO_Interface<Memory> {
 
     @Override
-    public void insert(Memory e) {
+    public boolean insert(Memory e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Memory e) {
+    public boolean update(Memory e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Memory e) {
+    public boolean dalete(Memory e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

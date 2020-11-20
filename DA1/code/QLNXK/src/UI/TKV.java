@@ -17,9 +17,11 @@ import javax.swing.table.DefaultTableModel;
  */
 public class TKV extends javax.swing.JDialog {
 
+    private AreaDAO areaDAO = new AreaDAO();
     private DefaultTableModel model;
 //    private ArrayList<Area> all, find;
     private boolean isfind = false;
+    private int page, curPage, row = 0;
 
     /**
      * Creates new form TKV
@@ -27,9 +29,11 @@ public class TKV extends javax.swing.JDialog {
     public TKV(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        setLocationRelativeTo(parent);
         model = (DefaultTableModel) tblKhuvuc.getModel();
 //        all = (new AreaDAO()).getList();
-        fillTable(1);
+        curPage = 1;
+        fillTable();
     }
 
     /**
@@ -68,6 +72,7 @@ public class TKV extends javax.swing.JDialog {
         tblKhuvuc = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Khu vực kho");
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Khu vực"));
 
@@ -78,10 +83,25 @@ public class TKV extends javax.swing.JDialog {
         jLabel2.setText("Viết tắt");
 
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         btnCapnhat.setText("Cập nhật");
+        btnCapnhat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCapnhatActionPerformed(evt);
+            }
+        });
 
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -143,6 +163,11 @@ public class TKV extends javax.swing.JDialog {
         });
 
         btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
+        btnHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHomeActionPerformed(evt);
+            }
+        });
 
         lblPos.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblPos.setForeground(new java.awt.Color(255, 0, 51));
@@ -150,15 +175,40 @@ public class TKV extends javax.swing.JDialog {
         lblPos.setText("1/1");
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/back.png"))); // NOI18N
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Next.png"))); // NOI18N
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         btnEnd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/end.png"))); // NOI18N
+        btnEnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEndActionPerformed(evt);
+            }
+        });
 
         txtPos.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtPos.setText("1");
+        txtPos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPosActionPerformed(evt);
+            }
+        });
 
         btnGo.setText("Đi đến");
+        btnGo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGoActionPerformed(evt);
+            }
+        });
 
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Trang:");
@@ -180,6 +230,11 @@ public class TKV extends javax.swing.JDialog {
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblKhuvuc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKhuvucMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblKhuvuc);
@@ -299,9 +354,74 @@ public class TKV extends javax.swing.JDialog {
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
         // TODO add your handling code here:
         isfind = true;
-        fillTable(1);
+        curPage = 1;
+        fillTable();
         txtPos.setText("1");
     }//GEN-LAST:event_btnTimActionPerformed
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        them();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnCapnhatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapnhatActionPerformed
+        // TODO add your handling code here:
+        capnhat();
+    }//GEN-LAST:event_btnCapnhatActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        xoa();
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
+        // TODO add your handling code here:
+        fillTable();
+    }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        curPage = curPage > 1 ? curPage-- : 1;
+        fillTable();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        curPage = curPage < page ? curPage++ : page;
+        fillTable();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndActionPerformed
+        // TODO add your handling code here:
+        curPage = page;
+        fillTable();
+    }//GEN-LAST:event_btnEndActionPerformed
+
+    private void txtPosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPosActionPerformed
+
+    private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPos.getText()) != curPage
+                    && Integer.parseInt(txtPos.getText()) > 0
+                    && Integer.parseInt(txtPos.getText()) <= page) {
+                curPage = Integer.parseInt(txtPos.getText());
+                fillTable();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
+    }//GEN-LAST:event_btnGoActionPerformed
+
+    private void tblKhuvucMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKhuvucMouseClicked
+        // TODO add your handling code here:
+        row = tblKhuvuc.getSelectedRow();
+        if (row >= 0) {
+            showDetail();
+        }
+    }//GEN-LAST:event_tblKhuvucMouseClicked
 
     /**
      * @param args the command line arguments
@@ -373,9 +493,9 @@ public class TKV extends javax.swing.JDialog {
     private javax.swing.JTextField txtViettatKV;
     // End of variables declaration//GEN-END:variables
 
-    private void fillTable(int page) {
-        ArrayList<Area> l = isfind ? (new AreaDAO()).getList(txtTimKV.getText().trim(), rdoTen.isSelected(), isfind) : (new AreaDAO()).getList();
-        int start = page * 10 - 10, end = 10 * page - 1;
+    private void fillTable() {
+        ArrayList<Area> l = isfind ? areaDAO.getList(txtTimKV.getText().trim(), rdoTen.isSelected(), isfind) : areaDAO.getList();
+        int start = curPage * 10 - 10, end = 10 * curPage - 1;
         if (l == null) {
             JOptionPane.showMessageDialog(this, "Không tìm thấy");
             return;
@@ -384,11 +504,94 @@ public class TKV extends javax.swing.JDialog {
             end = l.size() - 1;
         }
         if (l.size() > 0) {
+            this.page = (int) Math.ceil(l.size() / 10.0);
             model.setRowCount(0);
             for (int i = start; i <= end; i++) {
                 model.addRow(new Object[]{l.get(i).getName(), l.get(i).getId()});
             }
+            model.fireTableDataChanged();
+            txtPos.setText(String.valueOf(curPage));
+            lblPos.setText(String.valueOf(curPage) + "/" + String.valueOf(this.page));
+            showDetail();
+        }
+
+    }
+
+//    private boolean check() {
+//
+//        if (txtTenKV.getText().trim().length() <= 0) {
+//            JOptionPane.showMessageDialog(this, "chưa nhập tên khu vực");
+//            return false;
+//        }
+//        ArrayList<Area> l = areaDAO.getList(txtViettatKV.getText().trim(), false, true);
+//        if (l != null) {
+//            JOptionPane.showMessageDialog(this, "Đã tồn tại viết tắt xin mời chọn viết tắt khác");
+//            return false;
+//        }
+//        return true;
+//    }
+    private void them() {
+        if (txtViettatKV.getText().trim().length() != 3) {
+            JOptionPane.showMessageDialog(this, "Viết tắt phải là 3 ký tự");
+            return;
+        }
+        if (txtTenKV.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(this, "chưa nhập tên khu vực");
+            return;
+        }
+        ArrayList<Area> l = areaDAO.getList(txtViettatKV.getText().trim(), false, true);
+        if (l != null) {
+            JOptionPane.showMessageDialog(this, "Đã tồn tại viết tắt xin mời chọn viết tắt khác");
+            return;
+        }
+        if (areaDAO.insert(new Area(txtViettatKV.getText().trim().toUpperCase(), txtTenKV.getText().trim(), "AC")) == false) {
+            JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+        } else {
+            fillTable();
         }
     }
 
+    private void capnhat() {
+        if (tblKhuvuc.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(this, "chưa chọn khu vực");
+            return;
+        }
+        if (txtViettatKV.getText().trim().equalsIgnoreCase((String) model.getValueAt(tblKhuvuc.getSelectedRow(), 1)) == false) {
+            JOptionPane.showMessageDialog(this, "không thay đổi viết tắt");
+            return;
+        }
+        if (txtTenKV.getText().trim().length() <= 0) {
+            JOptionPane.showMessageDialog(this, "chưa nhập tên khu vực");
+            return;
+        }
+        if (areaDAO.update(new Area(txtViettatKV.getText().trim().toUpperCase(), txtTenKV.getText().trim(), "AC")) == false) {
+            JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+        } else {
+            fillTable();
+        }
+    }
+
+    private void xoa() {
+        if (tblKhuvuc.getSelectedRow() < 0) {
+            JOptionPane.showMessageDialog(this, "chưa chọn khu vực");
+            return;
+        }
+        if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
+            if (areaDAO.dalete(new Area(txtViettatKV.getText().trim().toUpperCase(), "", "DA")) == false) {
+                JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+            } else {
+                curPage = 1;
+                row = 0;
+                fillTable();
+                txtViettatKV.setText("");
+                txtTenKV.setText("");
+            }
+        }
+    }
+
+    private void showDetail() {
+        txtViettatKV.setText((String) model.getValueAt(row, 1));
+        txtTenKV.setText((String) model.getValueAt(row, 0));
+        tblKhuvuc.setRowSelectionInterval(row, row);
+    }
 }

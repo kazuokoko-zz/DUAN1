@@ -16,17 +16,17 @@ import java.util.ArrayList;
 public class ProductDAO implements DAO_Interface<Product>{
 
     @Override
-    public void insert(Product e) {
+    public boolean insert(Product e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void update(Product e) {
+    public boolean update(Product e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void dalete(Product e) {
+    public boolean dalete(Product e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
