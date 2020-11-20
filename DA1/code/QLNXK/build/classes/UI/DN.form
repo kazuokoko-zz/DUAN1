@@ -26,7 +26,7 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabel2" min="-2" pref="111" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -50,7 +50,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -103,13 +103,6 @@
     </Component>
     <Component class="javax.swing.JTextField" name="txtUser">
     </Component>
-    <Component class="javax.swing.JPasswordField" name="txtPass">
-      <Properties>
-        <Property name="echoChar" type="char" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-          <Connection code="&apos;+&apos;" type="code"/>
-        </Property>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="btnDN">
       <Properties>
         <Property name="text" type="java.lang.String" value="&#x110;&#x103;ng nh&#x1ead;p"/>
@@ -118,6 +111,11 @@
     <Component class="javax.swing.JButton" name="btnHuy">
       <Properties>
         <Property name="text" type="java.lang.String" value="H&#x1ee7;y"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JPasswordField" name="txtPass">
+      <Properties>
+        <Property name="echoChar" type="char" value="X"/>
       </Properties>
     </Component>
   </SubComponents>

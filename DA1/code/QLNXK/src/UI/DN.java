@@ -37,9 +37,9 @@ public class DN extends javax.swing.JDialog {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtUser = new javax.swing.JTextField();
-        txtPass = new javax.swing.JPasswordField();
         btnDN = new javax.swing.JButton();
         btnHuy = new javax.swing.JButton();
+        txtPass = new javax.swing.JPasswordField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Đăng Nhập");
@@ -52,11 +52,11 @@ public class DN extends javax.swing.JDialog {
 
         jLabel3.setText("Mật khẩu (*)");
 
-        txtPass.setEchoChar('+');
-
         btnDN.setText("Đăng nhập");
 
         btnHuy.setText("Hủy");
+
+        txtPass.setEchoChar('X');
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -64,7 +64,7 @@ public class DN extends javax.swing.JDialog {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
@@ -82,7 +82,7 @@ public class DN extends javax.swing.JDialog {
                                 .addComponent(btnHuy, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addComponent(txtPass))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
