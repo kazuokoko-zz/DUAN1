@@ -580,7 +580,7 @@ public class MSP extends javax.swing.JPanel {
     }
 
     private void fillTable(int page) {
-        int start = page * 10 - 10, end;
+        int start = page * 10 - 10, end = 10 * page - 1;
         detail = (new TypeDAO()).getAllDetail(rdoHD.isSelected() ? "KD" : "NB");
         if (end < detail.size() - 1) {
             end = detail.size() - 1;
@@ -603,7 +603,7 @@ public class MSP extends javax.swing.JPanel {
         showMemory();
         showColour();
         cboTH.setSelectedIndex(0);
-        fillTable(0, 10);
+        fillTable(1);
     }
 
     private void addCT(int openTab) {
