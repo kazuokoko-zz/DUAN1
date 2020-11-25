@@ -26,7 +26,7 @@ public class ProductDAO implements DAO_Interface<Product>{
     }
 
     @Override
-    public boolean dalete(Product e) {
+    public boolean delete(Product e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -8,6 +8,7 @@ package DAO;
 import INTERFACE.DAO_Interface;
 import Model.Memory;
 import Model.Producer;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -19,17 +20,32 @@ import java.util.ArrayList;
 public class MemoryDAO implements DAO_Interface<Memory> {
 
     @Override
-    public boolean insert(Memory e) {
+    public boolean insert(Memory memory) {
+        String sql = "insert into memories(amount,stat)\n"
+                + "values (?,?)";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setInt(1, memory.getAmount());
+            stm.setNString(2, memory.getStat());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean update(Memory memory) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public boolean update(Memory e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public boolean dalete(Memory e) {
+    public boolean delete(Memory memory) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

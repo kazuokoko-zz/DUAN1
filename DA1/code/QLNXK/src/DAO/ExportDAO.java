@@ -26,7 +26,7 @@ public class ExportDAO implements DAO_Interface<Export>{
     }
 
     @Override
-    public boolean dalete(Export e) {
+    public boolean delete(Export e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

@@ -33,7 +33,7 @@ public interface DAO_Interface<E> {
      *
      * @param e - đối tượng cần xóa
      */
-    public boolean dalete(E e);
+    public boolean delete(E e);
 
     /**
      * thêm dữ liệu vào database

@@ -37,4 +37,9 @@ public class Shelve {
     public void setShel_stat(int shel_stat) {
         this.shel_stat = shel_stat;
     }
+
+    @Override
+    public String toString() {
+        return "Kệ " + shel_id.substring(4, 8);
+    }
 }

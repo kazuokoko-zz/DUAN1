@@ -241,6 +241,7 @@ public class M extends javax.swing.JPanel {
         // TODO add your handling code here:
         Main.account = null;
         Main.logged = false;
+        
     }//GEN-LAST:event_btnExitActionPerformed
 
 

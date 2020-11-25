@@ -26,7 +26,7 @@ public class ImportDAO implements DAO_Interface<Import>{
     }
 
     @Override
-    public boolean dalete(Import e) {
+    public boolean delete(Import e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

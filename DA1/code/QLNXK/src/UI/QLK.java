@@ -5,9 +5,19 @@
  */
 package UI;
 
+import DAO.AreaDAO;
+import DAO.ShelveDAO;
+import Helper.Helper;
+import Model.Area;
+import Model.Shelve;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -15,11 +25,22 @@ import javax.swing.JFrame;
  */
 public class QLK extends javax.swing.JPanel {
 
+    private DefaultComboBoxModel kvModel, sModel;
+    private DefaultTableModel model;
+    private AreaDAO areaDAO = new AreaDAO();
+    private ShelveDAO shelveDAO = new ShelveDAO();
+    private ArrayList<Shelve> lstShelve, lstAllShelve;
+    private ArrayList<Area> lstArea;
+    private ArrayList<Integer> lstFind;
+    private int curPage = 1, page, row = 0, itemPerPage = 20, selectedKv = 0;
+    private String oldSearch = "";
+
     /**
      * Creates new form M
      */
     public QLK() {
         initComponents();
+        loadPanelData();
     }
 
     /**
@@ -52,10 +73,8 @@ public class QLK extends javax.swing.JPanel {
         btnThemke = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        txtName = new javax.swing.JTextField();
-        btnTim = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblKe = new javax.swing.JTable();
         jLabel16 = new javax.swing.JLabel();
         btnHome = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
@@ -64,6 +83,7 @@ public class QLK extends javax.swing.JPanel {
         btnEnd = new javax.swing.JButton();
         txtPos = new javax.swing.JTextField();
         btnGo = new javax.swing.JButton();
+        txtName = new javax.swing.JTextField();
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Kệ hàng"));
 
@@ -71,6 +91,11 @@ public class QLK extends javax.swing.JPanel {
         jLabel1.setText("Khu vực:");
 
         cboKhuvuc.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboKhuvuc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboKhuvucItemStateChanged(evt);
+            }
+        });
 
         btnThemkhuvuc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
         btnThemkhuvuc.addActionListener(new java.awt.event.ActionListener() {
@@ -86,11 +111,21 @@ public class QLK extends javax.swing.JPanel {
 
         cboKe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        cboTang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10" }));
+        cboTang.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9" }));
 
         btnXoa.setText("Xóa kệ");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         btnLuu.setText("Lưu");
+        btnLuu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLuuActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(rdoCo);
         rdoCo.setSelected(true);
@@ -115,6 +150,11 @@ public class QLK extends javax.swing.JPanel {
                 jscPhantramMouseDragged(evt);
             }
         });
+        jscPhantram.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jscPhantramMouseClicked(evt);
+            }
+        });
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Trạng thái:");
@@ -122,6 +162,11 @@ public class QLK extends javax.swing.JPanel {
         lblPhantram.setText("%");
 
         btnThemke.setText("Thêm 1 kệ");
+        btnThemke.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemkeActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -136,9 +181,9 @@ public class QLK extends javax.swing.JPanel {
                         .addContainerGap()
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(6, 6, 6)
-                        .addComponent(cboKhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnThemkhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(cboKhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnThemkhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(25, 25, 25)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -166,7 +211,7 @@ public class QLK extends javax.swing.JPanel {
                         .addComponent(jscPhantram, javax.swing.GroupLayout.PREFERRED_SIZE, 224, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblPhantram, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -192,17 +237,18 @@ public class QLK extends javax.swing.JPanel {
                     .addComponent(lblPhantram)
                     .addComponent(jscPhantram, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
+            .addComponent(jSeparator1)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(9, 9, 9)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1)
-                        .addComponent(cboKhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnThemkhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnThemke)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(cboKhuvuc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnThemke))
+                    .addComponent(btnThemkhuvuc))
                 .addGap(0, 0, Short.MAX_VALUE))
-            .addComponent(jSeparator1)
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Chi tiết kệ"));
@@ -210,10 +256,7 @@ public class QLK extends javax.swing.JPanel {
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Tên kệ");
 
-        btnTim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Search.png"))); // NOI18N
-        btnTim.setText("Tìm");
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblKe.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -232,14 +275,29 @@ public class QLK extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        tblKe.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblKeMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblKe);
 
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Trang:");
 
         btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
+        btnHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHomeActionPerformed(evt);
+            }
+        });
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/back.png"))); // NOI18N
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         lblPos.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblPos.setForeground(new java.awt.Color(255, 0, 51));
@@ -247,13 +305,37 @@ public class QLK extends javax.swing.JPanel {
         lblPos.setText("1/1");
 
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Next.png"))); // NOI18N
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         btnEnd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/end.png"))); // NOI18N
+        btnEnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEndActionPerformed(evt);
+            }
+        });
 
         txtPos.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtPos.setText("1");
 
         btnGo.setText("Đi đến");
+        btnGo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGoActionPerformed(evt);
+            }
+        });
+
+        txtName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNameKeyTyped(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -264,28 +346,28 @@ public class QLK extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 903, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnTim, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblPos, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtPos, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnGo)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblPos, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnNext, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtPos, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnGo))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 931, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 72, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -294,10 +376,9 @@ public class QLK extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
-                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnTim))
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 394, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnGo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -353,9 +434,101 @@ public class QLK extends javax.swing.JPanel {
 
     private void jscPhantramMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jscPhantramMouseDragged
         // TODO add your handling code here:
-        lblPhantram.setText(rdoCo.isSelected()?String.valueOf(jscPhantram.getValue()) + " %":lblPhantram.getText());
+        lblPhantram.setText(rdoCo.isSelected() ? String.valueOf(jscPhantram.getValue()) + " %" : lblPhantram.getText());
     }//GEN-LAST:event_jscPhantramMouseDragged
 
+    private void btnThemkeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemkeActionPerformed
+        // TODO add your handling code here:
+        addAShelve();
+    }//GEN-LAST:event_btnThemkeActionPerformed
+
+    private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
+        // TODO add your handling code here:
+        curPage = 1;
+        fillTable();
+    }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        curPage = curPage > 1 ? curPage - 1 : 1;
+        fillTable();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        curPage = curPage < page ? curPage + 1 : page;
+        fillTable();
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndActionPerformed
+        // TODO add your handling code here:curPage = page;
+        curPage = page;
+        fillTable();
+    }//GEN-LAST:event_btnEndActionPerformed
+
+    private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPos.getText()) != curPage
+                    && Integer.parseInt(txtPos.getText()) > 0
+                    && Integer.parseInt(txtPos.getText()) <= page) {
+                curPage = Integer.parseInt(txtPos.getText());
+                fillTable();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
+    }//GEN-LAST:event_btnGoActionPerformed
+
+    private void jscPhantramMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jscPhantramMouseClicked
+        // TODO add your handling code here:
+        lblPhantram.setText(rdoCo.isSelected() ? String.valueOf(jscPhantram.getValue()) + " %" : lblPhantram.getText());
+    }//GEN-LAST:event_jscPhantramMouseClicked
+
+    private void cboKhuvucItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboKhuvucItemStateChanged
+        // TODO add your handling code here:
+        int sel = cboKhuvuc.getSelectedIndex();
+        if (sel != selectedKv) {
+            selectedKv = sel;
+            loadKe();
+        }
+    }//GEN-LAST:event_cboKhuvucItemStateChanged
+
+    private void tblKeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblKeMouseClicked
+        // TODO add your handling code here:
+        row = tblKe.getSelectedRow();
+        if (row >= 0) {
+            showDetail();
+        }
+    }//GEN-LAST:event_tblKeMouseClicked
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        int selKv = cboKhuvuc.getSelectedIndex(), selK = cboKe.getSelectedIndex();
+        if (selKv >= 0 && selK >= 0) {
+            removeAShelve(selKv, selK);
+        }
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnLuuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLuuActionPerformed
+        // TODO add your handling code here:
+        int selKv = cboKhuvuc.getSelectedIndex(), selK = cboKe.getSelectedIndex(), selT = cboTang.getSelectedIndex();
+        if (selKv >= 0 && selK >= 0 && selT >= 0) {
+            updateStat(selKv, selK, selT);
+        }
+    }//GEN-LAST:event_btnLuuActionPerformed
+
+    private void txtNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtNameKeyTyped
+
+    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
+        // TODO add your handling code here:
+        if (txtName.getText().trim().length() > 0 && txtName.getText().trim().equalsIgnoreCase(oldSearch) == false) {
+            oldSearch = txtName.getText().trim();
+            fillTable(txtName.getText().trim());
+        }
+    }//GEN-LAST:event_txtNameKeyReleased
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
@@ -366,7 +539,6 @@ public class QLK extends javax.swing.JPanel {
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnThemke;
     private javax.swing.JButton btnThemkhuvuc;
-    private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXoa;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cboKe;
@@ -382,19 +554,214 @@ public class QLK extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JSlider jscPhantram;
     private javax.swing.JLabel lblPhantram;
     private javax.swing.JLabel lblPos;
     private javax.swing.JRadioButton rdoCo;
     private javax.swing.JRadioButton rdoHong;
     private javax.swing.JRadioButton rdoKhongco;
+    private javax.swing.JTable tblKe;
     private javax.swing.JTextField txtName;
     private javax.swing.JTextField txtPos;
     // End of variables declaration//GEN-END:variables
 
-    private void loadPanelData() {
+    private void loadKV() {
+        kvModel = new DefaultComboBoxModel();
+        cboKhuvuc.setModel(kvModel);
+        kvModel.removeAllElements();
+        lstArea = areaDAO.getList();
+        for (Area area : lstArea) {
+            kvModel.addElement(area);
+        }
+    }
 
+    private void loadKe() {
+        sModel = new DefaultComboBoxModel();
+        cboKe.setModel(sModel);
+        sModel.removeAllElements();
+        lstShelve = shelveDAO.getList(lstArea.get(selectedKv).getId());
+        if (lstShelve != null) {
+            for (Shelve shelve : lstShelve) {
+                sModel.addElement(shelve);
+            }
+        }
+
+    }
+
+    private void loadPanelData() {
+        loadKV();
+        loadKe();
+        model = (DefaultTableModel) tblKe.getModel();
+        tblKe.setModel(model);
+        fillTable();
+        if (model.getRowCount() > 0) {
+            showDetail();
+        }
+    }
+
+    private void fillTable() {
+        fillTable(null);
+    }
+
+    private void fillTable(String search) {
+        lstAllShelve = shelveDAO.getList();
+        int start = curPage * itemPerPage - itemPerPage, end = itemPerPage * curPage - 1;
+
+        if (search != null) {
+            ArrayList<String> lstF = new ArrayList<>();
+            for (Shelve shelve : lstAllShelve) {
+                String areaName = "";
+                for (Area area : lstArea) {
+                    if (area.getId().equalsIgnoreCase(shelve.getShel_id().substring(0, 3))) {
+                        areaName = area.getName();
+                        break;
+                    }
+                }
+                lstF.add(areaName + ", Kệ "
+                        + shelve.getShel_id().substring(4, 8)
+                        + ", Tầng " + shelve.getShel_id().substring(9, 10));
+            }
+            lstFind = new ArrayList<>();
+            for (int i = lstF.size() - 1; i >= 0; i--) {
+                if (Helper.removeAccent(lstF.get(i)).toLowerCase().contains(Helper.removeAccent(search).toLowerCase()) == false) {
+                    lstF.remove(i);
+                    lstAllShelve.remove(i);
+                } else {
+                    lstFind.add(i);
+                }
+            }
+
+        }
+        if (lstAllShelve == null) {
+            model.setRowCount(0);
+            model.fireTableDataChanged();
+            return;
+        }
+        if (end > lstAllShelve.size() - 1) {
+            end = lstAllShelve.size() - 1;
+        }
+//        showSearch("");
+        if (lstAllShelve.size() > 0) {
+            this.page = (int) Math.ceil(lstAllShelve.size() / (double) itemPerPage);
+            model.setRowCount(0);
+
+            for (int i = start; i <= end; i++) {
+                String areaName = "";
+                for (Area area : lstArea) {
+                    if (area.getId().equalsIgnoreCase(lstAllShelve.get(i).getShel_id().substring(0, 3))) {
+                        areaName = area.getName();
+                        break;
+                    }
+                }
+                int stat = lstAllShelve.get(i).getShel_stat();
+
+                model.addRow(new Object[]{lstAllShelve.get(i).getShel_id(), areaName + ", Kệ "
+                    + lstAllShelve.get(i).getShel_id().substring(4, 8)
+                    + ", Tầng " + lstAllShelve.get(i).getShel_id().substring(9, 10),
+                    stat < 0 ? "Hỏng" : (0 <= stat && stat <= 100 ? String.valueOf(stat) + "%" : "Không có")});
+
+            }
+            model.fireTableDataChanged();
+            txtPos.setText(String.valueOf(curPage));
+            lblPos.setText(String.valueOf(curPage) + "/" + String.valueOf(this.page));
+        }
+    }
+
+    //
+//    private void showSearch(String search) {
+//        //
+//        ArrayList<String> lstF = new ArrayList<>();
+//        for (Shelve shelve : lstAllShelve) {
+//            String areaName = "";
+//            for (Area area : lstArea) {
+//                if (area.getId().equalsIgnoreCase(shelve.getShel_id().substring(0, 3))) {
+//                    areaName = area.getName();
+//                    break;
+//                }
+//            }
+//            lstF.add(areaName + ", Kệ "
+//                    + shelve.getShel_id().substring(4, 8)
+//                    + ", Tầng " + shelve.getShel_id().substring(9, 10));
+//        }
+//        lstFind = new ArrayList<>();
+//        for (int i = lstF.size() - 1; i >= 0; i--) {
+//            if (lstF.get(i).contains(search) == false) {
+//                lstF.remove(i);
+//            } else {
+//                lstFind.add(i);
+//            }
+//        }
+//        Collections.reverse(lstFind);
+//
+////cboName.setPopupVisible(true);
+////            cboName.showPopup();
+////        if (search.equalsIgnoreCase("") == false) {
+////        }
+//        //
+//    }
+
+    //
+    private void showDetail() {
+        if (row >= 0) {
+            int show = row + itemPerPage * (curPage - 1);
+            cboTang.setSelectedIndex(Integer.parseInt(lstAllShelve.get(show).getShel_id().substring(9, 10)) - 1);
+            tblKe.setRowSelectionInterval(row, row);
+            String shel_id = lstAllShelve.get(show).getShel_id();
+            for (Area area : lstArea) {
+                if (area.getId().equalsIgnoreCase(shel_id.substring(0, 3))) {
+                    cboKhuvuc.setSelectedIndex(lstArea.indexOf(area));
+                    break;
+                }
+            }
+            for (Shelve shelve : lstShelve) {
+                if (shelve.getShel_id().substring(4, 8).equalsIgnoreCase(shel_id.substring(4, 8))) {
+                    cboKe.setSelectedIndex(lstShelve.indexOf(shelve));
+                    break;
+                }
+            }
+            cboTang.setSelectedIndex(Integer.parseInt(shel_id.substring(9, 10)) - 1);
+            int stat = lstAllShelve.get(show).getShel_stat();
+            if (stat < 0) {
+                rdoHong.setSelected(true);
+            } else if (stat < 101) {
+                rdoCo.setSelected(true);
+                jscPhantram.setValue(stat);
+            } else {
+                rdoKhongco.setSelected(true);
+            }
+        }
+    }
+
+    private void addAShelve() {
+        int sel = cboKhuvuc.getSelectedIndex();
+        String area = ((Area) cboKhuvuc.getSelectedItem()).getId();
+        if (sel >= 0) {
+            shelveDAO.insert(area);
+
+            row = 0;
+            curPage = 1;
+            loadPanelData();
+        } else {
+            JOptionPane.showMessageDialog(this, "Mời chọn một khu vực");
+        }
+    }
+
+    private void removeAShelve(int kv, int k) {
+        Area area = lstArea.get(kv);
+        Shelve shelve = lstShelve.get(k);
+        shelveDAO.delete(area, shelve);
+        row = 0;
+        curPage = 1;
+        loadPanelData();
+    }
+
+    private void updateStat(int kv, int k, int t) {
+        String shel_id = lstArea.get(kv).getId() + "-"
+                + lstShelve.get(k).getShel_id().substring(4, 8) + "-"
+                + ((String) cboTang.getSelectedItem());
+        int shel_stat = rdoCo.isSelected() ? jscPhantram.getValue() : (rdoHong.isSelected() ? -1 : 101);
+        shelveDAO.update(new Shelve(shel_id, shel_stat));
+        loadPanelData();
     }
 
 }

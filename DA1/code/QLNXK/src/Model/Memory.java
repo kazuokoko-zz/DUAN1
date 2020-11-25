@@ -33,11 +33,11 @@ public class Memory {
         this.id = id;
     }
 
-    public int getName() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setName(int amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 

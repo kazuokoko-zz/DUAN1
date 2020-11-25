@@ -29,7 +29,7 @@ public class ColourDAO implements DAO_Interface<Colour> {
     }
 
     @Override
-    public boolean dalete(Colour e) {
+    public boolean delete(Colour e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

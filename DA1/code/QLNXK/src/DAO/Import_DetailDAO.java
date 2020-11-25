@@ -26,7 +26,7 @@ public class Import_DetailDAO implements DAO_Interface<Import_Detail> {
     }
 
     @Override
-    public boolean dalete(Import_Detail e) {
+    public boolean delete(Import_Detail e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

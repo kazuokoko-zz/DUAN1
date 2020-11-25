@@ -31,7 +31,7 @@ public class AccountDAO implements DAO_Interface<Account> {
     }
 
     @Override
-    public boolean dalete(Account e) {
+    public boolean delete(Account e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

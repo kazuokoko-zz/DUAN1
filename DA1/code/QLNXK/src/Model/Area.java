@@ -46,4 +46,8 @@ public class Area {
         this.stat = stat;
     }
 
+    @Override
+    public String toString() {
+        return name;
+    }
 }

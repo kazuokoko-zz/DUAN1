@@ -19,18 +19,65 @@ import java.util.ArrayList;
 public class ProducerDAO implements DAO_Interface<Producer> {
 
     @Override
-    public boolean insert(Producer e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean insert(Producer producer) {
+        String sql = "insert into producers(id,name,stat)\n"
+                + "values (?,?,?)";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, producer.getId());
+            stm.setNString(2, producer.getName());
+            stm.setNString(3, producer.getStat());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public boolean update(Producer e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean update(Producer producer) {
+        String sql = "update producers\n"
+                + "set name = ?\n"
+                + "where id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, producer.getName());
+            stm.setNString(2, producer.getId());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public boolean dalete(Producer e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean delete(Producer producer) {
+        String sql = "update producers\n"
+                + "set stat = N'KHD'\n"
+                + "where id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, producer.getId());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -40,39 +87,22 @@ public class ProducerDAO implements DAO_Interface<Producer> {
 
     @Override
     public ArrayList<Producer> selectAllByColumn(Object... param) {
-        ArrayList<Producer> prd = new ArrayList<>();
-        String sql = "select * from producers\n"
-                + "where id like ? and name like ?";
-        try {
-            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
-            stm.setNString(1, "%" + ((Producer) param[0]).getId() + "%");
-            stm.setNString(2, "%" + ((Producer) param[0]).getName() + "%");
-
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                prd.add(new Producer(rs.getNString("id"), rs.getNString("name"), rs.getNString("stat")));
-            }
-
-        } catch (Exception e) {
-            prd = null;
-        }
-        return prd;
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public ArrayList<Producer> selectAll() {
         ArrayList<Producer> prd = new ArrayList<>();
-        String sql = "select * from producers";
+        String sql = "select * from PRODUCERS\n"
+                + "where stat like 'DHD'";
         try {
             Statement stm = Helper.Helper.connection.createStatement();
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
                 prd.add(new Producer(rs.getNString("id"), rs.getNString("name"), rs.getNString("stat")));
             }
-
         } catch (Exception e) {
             prd = null;
         }
-        return prd;
+        return prd.size() > 0 ? prd : null;
     }
-
 }

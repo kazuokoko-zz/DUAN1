@@ -28,7 +28,7 @@ public class TypeDAO implements DAO_Interface<Type> {
     }
 
     @Override
-    public boolean dalete(Type e) {
+    public boolean delete(Type e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

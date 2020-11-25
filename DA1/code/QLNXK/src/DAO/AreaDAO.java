@@ -62,7 +62,7 @@ public class AreaDAO implements DAO_Interface<Area> {
     }
 
     @Override
-    public boolean dalete(Area e) {
+    public boolean delete(Area e) {
         String sql = "update areas\n"
                 + "set stat = N'DA'\n"
                 + "where id like ?";
@@ -120,7 +120,7 @@ public class AreaDAO implements DAO_Interface<Area> {
         } catch (Exception e) {
             return null;
         }
-
     }
+    
 
 }

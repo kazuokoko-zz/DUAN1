@@ -31,6 +31,12 @@ public class Main extends javax.swing.JFrame {
                 if (logged == false) {
                     showLG();
                 }
+                try {
+                    Thread.sleep(1000);
+                    long i = 0;
+                    System.out.printf("%d", ++i);
+                } catch (Exception e) {
+                }
             }
         }
     });
@@ -83,77 +89,72 @@ public class Main extends javax.swing.JFrame {
 
         buttonGroup1.add(btnMain);
         btnMain.setText("CHƯƠNG TRÌNH");
-        btnMain.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnMainStateChanged(evt);
-            }
-        });
-        btnMain.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMainActionPerformed(evt);
+        btnMain.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnMainItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnNK);
         btnNK.setText("NHẬP KHO");
         btnNK.setEnabled(false);
-        btnNK.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnNKStateChanged(evt);
+        btnNK.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnNKItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnXK);
         btnXK.setText("XUẤT KHO");
         btnXK.setEnabled(false);
-        btnXK.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnXKStateChanged(evt);
+        btnXK.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnXKItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnNCC);
         btnNCC.setText("NHÀ CUNG CẤP");
         btnNCC.setEnabled(false);
-        btnNCC.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnNCCStateChanged(evt);
+        btnNCC.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnNCCItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnMSP);
         btnMSP.setText("MÃ SẢN PHẨM");
         btnMSP.setEnabled(false);
-        btnMSP.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnMSPStateChanged(evt);
+        btnMSP.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnMSPItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnQLK);
         btnQLK.setText("QUẢN LÝ KỆ");
         btnQLK.setEnabled(false);
-        btnQLK.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnQLKStateChanged(evt);
+        btnQLK.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnQLKItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnTK);
         btnTK.setText("TÌM KIẾM");
         btnTK.setEnabled(false);
-        btnTK.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnTKStateChanged(evt);
+        btnTK.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnTKItemStateChanged(evt);
             }
         });
 
         buttonGroup1.add(btnTDTT);
         btnTDTT.setText("THAY ĐỔI TRẠNG THÁI");
         btnTDTT.setEnabled(false);
-        btnTDTT.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                btnTDTTStateChanged(evt);
+        btnTDTT.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                btnTDTTItemStateChanged(evt);
             }
         });
 
@@ -193,10 +194,10 @@ public class Main extends javax.swing.JFrame {
                 .addComponent(btnTK)
                 .addGap(18, 18, 18)
                 .addComponent(btnTDTT)
-                .addContainerGap(373, Short.MAX_VALUE))
+                .addContainerGap(370, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, -1, -1));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(12, 12, -1, 720));
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
 
@@ -241,74 +242,69 @@ public class Main extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnMainActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMainActionPerformed
-        // TODO add your handling code here:
-
-    }//GEN-LAST:event_btnMainActionPerformed
-
-    private void btnMainStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnMainStateChanged
+    private void btnMainItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnMainItemStateChanged
         // TODO add your handling code here:
         if (btnMain.isSelected()) {
             M m = new M();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnMainStateChanged
+    }//GEN-LAST:event_btnMainItemStateChanged
 
-    private void btnNKStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnNKStateChanged
+    private void btnNKItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnNKItemStateChanged
         // TODO add your handling code here:
         if (btnNK.isSelected()) {
             NK m = new NK();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnNKStateChanged
+    }//GEN-LAST:event_btnNKItemStateChanged
 
-    private void btnXKStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnXKStateChanged
+    private void btnXKItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnXKItemStateChanged
         // TODO add your handling code here:
         if (btnXK.isSelected()) {
             XK m = new XK();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnXKStateChanged
+    }//GEN-LAST:event_btnXKItemStateChanged
 
-    private void btnNCCStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnNCCStateChanged
+    private void btnNCCItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnNCCItemStateChanged
         // TODO add your handling code here:
         if (btnNCC.isSelected()) {
             NCC m = new NCC();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnNCCStateChanged
+    }//GEN-LAST:event_btnNCCItemStateChanged
 
-    private void btnMSPStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnMSPStateChanged
+    private void btnMSPItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnMSPItemStateChanged
         // TODO add your handling code here:
         if (btnMSP.isSelected()) {
             MSP m = new MSP();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnMSPStateChanged
+    }//GEN-LAST:event_btnMSPItemStateChanged
 
-    private void btnQLKStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnQLKStateChanged
+    private void btnQLKItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnQLKItemStateChanged
         // TODO add your handling code here:
         if (btnQLK.isSelected()) {
             QLK m = new QLK();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnQLKStateChanged
+    }//GEN-LAST:event_btnQLKItemStateChanged
 
-    private void btnTKStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnTKStateChanged
+    private void btnTKItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnTKItemStateChanged
         // TODO add your handling code here:
         if (btnTK.isSelected()) {
             TK m = new TK();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnTKStateChanged
+    }//GEN-LAST:event_btnTKItemStateChanged
 
-    private void btnTDTTStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_btnTDTTStateChanged
+    private void btnTDTTItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_btnTDTTItemStateChanged
         // TODO add your handling code here:
         if (btnTDTT.isSelected()) {
             TDTT m = new TDTT();
             showPanel(m);
         }
-    }//GEN-LAST:event_btnTDTTStateChanged
+    }//GEN-LAST:event_btnTDTTItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -319,22 +315,22 @@ public class Main extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-//        try {
-//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
         //</editor-fold>
 
         /* Create and display the form */

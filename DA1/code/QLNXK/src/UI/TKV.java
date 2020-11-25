@@ -21,7 +21,8 @@ public class TKV extends javax.swing.JDialog {
     private DefaultTableModel model;
 //    private ArrayList<Area> all, find;
     private boolean isfind = false;
-    private int page, curPage, row = 0;
+    private int page, curPage, row = 0, itemPerPage = 3;
+    private String oldString;
 
     /**
      * Creates new form TKV
@@ -73,6 +74,7 @@ public class TKV extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Khu vực kho");
+        setResizable(false);
 
         jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder("Khu vực"));
 
@@ -81,6 +83,12 @@ public class TKV extends javax.swing.JDialog {
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Viết tắt");
+
+        txtViettatKV.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtViettatKVKeyReleased(evt);
+            }
+        });
 
         btnThem.setText("Thêm");
         btnThem.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +163,12 @@ public class TKV extends javax.swing.JDialog {
         buttonGroup1.add(rdoViettat);
         rdoViettat.setText("Tìm theo viết tắt");
 
+        txtTimKV.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTimKVKeyReleased(evt);
+            }
+        });
+
         btnTim.setText("Tìm");
         btnTim.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -197,11 +211,6 @@ public class TKV extends javax.swing.JDialog {
 
         txtPos.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtPos.setText("1");
-        txtPos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPosActionPerformed(evt);
-            }
-        });
 
         btnGo.setText("Đi đến");
         btnGo.addActionListener(new java.awt.event.ActionListener() {
@@ -323,8 +332,8 @@ public class TKV extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -340,11 +349,11 @@ public class TKV extends javax.swing.JDialog {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 622, Short.MAX_VALUE)
+            .addGap(0, 624, Short.MAX_VALUE)
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(0, 0, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 622, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(0, 0, Short.MAX_VALUE)))
         );
 
@@ -376,30 +385,31 @@ public class TKV extends javax.swing.JDialog {
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
         // TODO add your handling code here:
+        curPage = 1;
+        row = 0;
         fillTable();
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
-        curPage = curPage > 1 ? curPage-- : 1;
+        curPage = curPage > 1 ? curPage - 1 : 1;
+        row = 0;
         fillTable();
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         // TODO add your handling code here:
-        curPage = curPage < page ? curPage++ : page;
+        curPage = curPage < page ? curPage + 1 : page;
+        row = 0;
         fillTable();
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndActionPerformed
         // TODO add your handling code here:
         curPage = page;
+        row = 0;
         fillTable();
     }//GEN-LAST:event_btnEndActionPerformed
-
-    private void txtPosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPosActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtPosActionPerformed
 
     private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
         // TODO add your handling code here:
@@ -408,6 +418,7 @@ public class TKV extends javax.swing.JDialog {
                     && Integer.parseInt(txtPos.getText()) > 0
                     && Integer.parseInt(txtPos.getText()) <= page) {
                 curPage = Integer.parseInt(txtPos.getText());
+                row = 0;
                 fillTable();
             }
         } catch (Exception e) {
@@ -422,6 +433,21 @@ public class TKV extends javax.swing.JDialog {
             showDetail();
         }
     }//GEN-LAST:event_tblKhuvucMouseClicked
+
+    private void txtViettatKVKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtViettatKVKeyReleased
+        // TODO add your handling code here:
+        oldString = Helper.Helper.removeAccent(txtViettatKV.getText().length() <= 3 ? txtViettatKV.getText() : oldString);
+        txtViettatKV.setText(oldString.toUpperCase());
+        evt.consume();
+    }//GEN-LAST:event_txtViettatKVKeyReleased
+
+    private void txtTimKVKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimKVKeyReleased
+        // TODO add your handling code here:
+        isfind = txtTimKV.getText().trim().length() > 0;
+        curPage = 1;
+        fillTable();
+        txtPos.setText("1");
+    }//GEN-LAST:event_txtTimKVKeyReleased
 
     /**
      * @param args the command line arguments
@@ -495,16 +521,16 @@ public class TKV extends javax.swing.JDialog {
 
     private void fillTable() {
         ArrayList<Area> l = isfind ? areaDAO.getList(txtTimKV.getText().trim(), rdoTen.isSelected(), isfind) : areaDAO.getList();
-        int start = curPage * 10 - 10, end = 10 * curPage - 1;
+        int start = curPage * itemPerPage - itemPerPage, end = itemPerPage * curPage - 1;
         if (l == null) {
-            JOptionPane.showMessageDialog(this, "Không tìm thấy");
             return;
         }
+
         if (end > l.size() - 1) {
             end = l.size() - 1;
         }
         if (l.size() > 0) {
-            this.page = (int) Math.ceil(l.size() / 10.0);
+            this.page = (int) Math.ceil(l.size() / (double) itemPerPage);
             model.setRowCount(0);
             for (int i = start; i <= end; i++) {
                 model.addRow(new Object[]{l.get(i).getName(), l.get(i).getId()});
@@ -517,19 +543,6 @@ public class TKV extends javax.swing.JDialog {
 
     }
 
-//    private boolean check() {
-//
-//        if (txtTenKV.getText().trim().length() <= 0) {
-//            JOptionPane.showMessageDialog(this, "chưa nhập tên khu vực");
-//            return false;
-//        }
-//        ArrayList<Area> l = areaDAO.getList(txtViettatKV.getText().trim(), false, true);
-//        if (l != null) {
-//            JOptionPane.showMessageDialog(this, "Đã tồn tại viết tắt xin mời chọn viết tắt khác");
-//            return false;
-//        }
-//        return true;
-//    }
     private void them() {
         if (txtViettatKV.getText().trim().length() != 3) {
             JOptionPane.showMessageDialog(this, "Viết tắt phải là 3 ký tự");
@@ -577,7 +590,7 @@ public class TKV extends javax.swing.JDialog {
             return;
         }
         if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
-            if (areaDAO.dalete(new Area(txtViettatKV.getText().trim().toUpperCase(), "", "DA")) == false) {
+            if (areaDAO.delete(new Area(txtViettatKV.getText().trim().toUpperCase(), "", "DA")) == false) {
                 JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
             } else {
                 curPage = 1;
@@ -593,5 +606,6 @@ public class TKV extends javax.swing.JDialog {
         txtViettatKV.setText((String) model.getValueAt(row, 1));
         txtTenKV.setText((String) model.getValueAt(row, 0));
         tblKhuvuc.setRowSelectionInterval(row, row);
+        oldString = txtViettatKV.getText();
     }
 }

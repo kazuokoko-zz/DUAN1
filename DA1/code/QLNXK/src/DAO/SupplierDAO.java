@@ -26,7 +26,7 @@ public class SupplierDAO implements DAO_Interface<Supplier>{
     }
 
     @Override
-    public boolean dalete(Supplier e) {
+    public boolean delete(Supplier e) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
