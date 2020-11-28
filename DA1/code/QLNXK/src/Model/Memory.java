@@ -13,24 +13,15 @@ import java.text.DecimalFormat;
  */
 public class Memory {
 
-    private int id, amount;
+    private int amount;
     private String stat;
 
     public Memory() {
     }
 
-    public Memory(int id, int amount, String stat) {
-        this.id = id;
+    public Memory(int amount, String stat) {
         this.amount = amount;
         this.stat = stat;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getAmount() {

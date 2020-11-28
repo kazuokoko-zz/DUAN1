@@ -7,7 +7,6 @@ package DAO;
 
 import INTERFACE.DAO_Interface;
 import Model.Memory;
-import Model.Producer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -41,12 +40,44 @@ public class MemoryDAO implements DAO_Interface<Memory> {
 
     @Override
     public boolean update(Memory memory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         String sql = "update memories\n"
+                + "set stat = ?\n"
+                + "where amount = ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, "DHD");
+            stm.setInt(2, memory.getAmount());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
     public boolean delete(Memory memory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql = "update memories\n"
+                + "set stat = ?\n"
+                + "where amount = ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, "KHD");
+            stm.setInt(2, memory.getAmount());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
@@ -59,14 +90,32 @@ public class MemoryDAO implements DAO_Interface<Memory> {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    public Memory select(Memory memory) {
+        Memory mmr = null;
+        String sql = "select * from memories\n"
+                + "where amount = ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setInt(1, memory.getAmount());
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                mmr = new Memory(rs.getInt("amount"), rs.getNString("stat"));
+            }
+        } catch (Exception e) {
+            mmr = null;
+        }
+        return mmr;
+    }
+
     public ArrayList<Memory> selectAll() {
         ArrayList<Memory> mmr = new ArrayList<>();
-        String sql = "select * from memories";
+        String sql = "select * from memories\n"
+                + "where stat like 'DHD'";
         try {
             Statement stm = Helper.Helper.connection.createStatement();
             ResultSet rs = stm.executeQuery(sql);
             while (rs.next()) {
-                mmr.add(new Memory(rs.getInt("id"), rs.getInt("amount"), rs.getNString("stat")));
+                mmr.add(new Memory(rs.getInt("amount"), rs.getNString("stat")));
             }
 
         } catch (Exception e) {

@@ -14,6 +14,7 @@ import Model.Memory;
 import Model.PhoneName;
 import Model.Producer;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -28,9 +29,9 @@ public class TCT extends javax.swing.JDialog {
     /**
      * START TH
      */
-    private String thFind, oldString;
+    private String oldString;
     private DefaultTableModel thModel;
-    private int curPageTH, pageTH, showTH, rowTH, itemPerPageTH;
+    private int curPageTH, pageTH, rowTH, itemPerPageTH;
     private ArrayList<Producer> lstAllTH;
     private ProducerDAO producerDAO;
 
@@ -40,7 +41,7 @@ public class TCT extends javax.swing.JDialog {
     /**
      * START TM
      */
-    private String tmFind, tmThId;
+    private String tmThId, oldName;
     private DefaultTableModel tmModel;
     private DefaultComboBoxModel tmCboModel;
     private int curPageTM, pageTM, showTM, rowTM, itemPerPageTM;
@@ -53,7 +54,8 @@ public class TCT extends javax.swing.JDialog {
     /**
      * START BN
      */
-    private String bnFind;
+    private String oldStringBN;
+    private boolean fOk;
     private DefaultTableModel bnModel;
     private int curPageBN, pageBN, showBN, rowBN, itemPerPageBN;
     private ArrayList<Memory> lstAllBN;
@@ -65,7 +67,6 @@ public class TCT extends javax.swing.JDialog {
     /**
      * START M
      */
-    private String mFind;
     private DefaultTableModel mModel;
     private int curPageM, pageM, showM, rowM, itemPerPageM;
     private ArrayList<Colour> lstAllM;
@@ -155,7 +156,6 @@ public class TCT extends javax.swing.JDialog {
         jLabel5 = new javax.swing.JLabel();
         txtDungluong = new javax.swing.JTextField();
         btnThemDL = new javax.swing.JButton();
-        btnCapnhatDL = new javax.swing.JButton();
         btnXoaDL = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
         jPanel12 = new javax.swing.JPanel();
@@ -176,7 +176,6 @@ public class TCT extends javax.swing.JDialog {
         jLabel7 = new javax.swing.JLabel();
         txtTenmau = new javax.swing.JTextField();
         btnThemmau = new javax.swing.JButton();
-        btnCapnhatmau = new javax.swing.JButton();
         btnXoaMau = new javax.swing.JButton();
         jPanel15 = new javax.swing.JPanel();
         txtTimmau = new javax.swing.JTextField();
@@ -719,17 +718,22 @@ public class TCT extends javax.swing.JDialog {
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Dung lượng");
 
+        txtDungluong.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtDungluongKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDungluongKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDungluongKeyTyped(evt);
+            }
+        });
+
         btnThemDL.setText("Thêm");
         btnThemDL.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnThemDLActionPerformed(evt);
-            }
-        });
-
-        btnCapnhatDL.setText("Cập nhật");
-        btnCapnhatDL.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCapnhatDLActionPerformed(evt);
             }
         });
 
@@ -750,14 +754,12 @@ public class TCT extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtDungluong, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtDungluong, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnThemDL, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCapnhatDL, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(btnXoaDL, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
@@ -770,7 +772,6 @@ public class TCT extends javax.swing.JDialog {
                     .addComponent(txtDungluong, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel9)
                     .addComponent(btnThemDL)
-                    .addComponent(btnCapnhatDL)
                     .addComponent(btnXoaDL))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -780,6 +781,9 @@ public class TCT extends javax.swing.JDialog {
         txtTimDL.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTimDLKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtTimDLKeyTyped(evt);
             }
         });
 
@@ -944,13 +948,6 @@ public class TCT extends javax.swing.JDialog {
             }
         });
 
-        btnCapnhatmau.setText("Cập nhật");
-        btnCapnhatmau.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCapnhatmauActionPerformed(evt);
-            }
-        });
-
         btnXoaMau.setText("Xóa");
         btnXoaMau.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -966,11 +963,9 @@ public class TCT extends javax.swing.JDialog {
                 .addContainerGap()
                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtTenmau, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnThemmau, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtTenmau, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnCapnhatmau, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnThemmau, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnXoaMau, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -979,14 +974,11 @@ public class TCT extends javax.swing.JDialog {
             jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel14Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnThemmau)
-                        .addComponent(btnCapnhatmau)
-                        .addComponent(btnXoaMau))
-                    .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel7)
-                        .addComponent(txtTenmau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel14Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(txtTenmau, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnThemmau)
+                    .addComponent(btnXoaMau))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1205,7 +1197,7 @@ public class TCT extends javax.swing.JDialog {
                 fillTableTH(txtTimTH.getText().trim().equalsIgnoreCase("") ? null : txtTimTH.getText().trim());
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+            JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
         }
     }//GEN-LAST:event_btnGoTHActionPerformed
 
@@ -1287,7 +1279,7 @@ public class TCT extends javax.swing.JDialog {
                 fillTableTH(txtTimM.getText().trim().equalsIgnoreCase("") ? null : txtTimM.getText().trim());
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+            JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
         }
     }//GEN-LAST:event_btnGoMActionPerformed
 
@@ -1332,88 +1324,149 @@ public class TCT extends javax.swing.JDialog {
 
     private void btnThemDLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemDLActionPerformed
         // TODO add your handling code here:
+        insertBN();
     }//GEN-LAST:event_btnThemDLActionPerformed
-
-    private void btnCapnhatDLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapnhatDLActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCapnhatDLActionPerformed
 
     private void btnXoaDLActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaDLActionPerformed
         // TODO add your handling code here:
+        deleteBN();
     }//GEN-LAST:event_btnXoaDLActionPerformed
 
     private void txtTimDLKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimDLKeyReleased
         // TODO add your handling code here:
+        if (fOk) {
+            curPageBN = 1;
+            rowBN = 0;
+            fillTableBN(txtTimDL.getText().trim().equalsIgnoreCase("") ? null : txtTimDL.getText().trim());
+        }
     }//GEN-LAST:event_txtTimDLKeyReleased
 
     private void tblBonhoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBonhoMouseClicked
         // TODO add your handling code here:
+        rowBN = tblBonho.getSelectedRow();
+        if (rowBN >= 0) {
+            showDetailBN();
+        }
     }//GEN-LAST:event_tblBonhoMouseClicked
 
     private void btnHomeBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeBNActionPerformed
         // TODO add your handling code here:
+        curPageBN = 1;
+        rowBN = 0;
+        fillTableBN(txtTimDL.getText().trim().equalsIgnoreCase("") ? null : txtTimDL.getText().trim());
     }//GEN-LAST:event_btnHomeBNActionPerformed
 
     private void btnBackBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackBNActionPerformed
         // TODO add your handling code here:
+        curPageBN = curPageBN > 1 ? curPageBN - 1 : 1;
+        rowBN = 0;
+        fillTableBN(txtTimDL.getText().trim().equalsIgnoreCase("") ? null : txtTimDL.getText().trim());
     }//GEN-LAST:event_btnBackBNActionPerformed
 
     private void btnNextBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextBNActionPerformed
         // TODO add your handling code here:
+        curPageBN = curPageBN < pageBN ? curPageBN + 1 : pageBN;
+        rowBN = 0;
+        fillTableBN(txtTimDL.getText().trim().equalsIgnoreCase("") ? null : txtTimDL.getText().trim());
     }//GEN-LAST:event_btnNextBNActionPerformed
 
     private void btnEndBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndBNActionPerformed
         // TODO add your handling code here:
+        curPageBN = pageBN;
+        rowBN = 0;
+        fillTableBN(txtTimDL.getText().trim().equalsIgnoreCase("") ? null : txtTimDL.getText().trim());
     }//GEN-LAST:event_btnEndBNActionPerformed
 
     private void btnGoBNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoBNActionPerformed
         // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPosBN.getText()) != curPageBN
+                    && Integer.parseInt(txtPosBN.getText()) > 0
+                    && Integer.parseInt(txtPosBN.getText()) <= pageBN) {
+                curPageBN = Integer.parseInt(txtPosBN.getText());
+                rowBN = 0;
+                fillTableBN(txtTimDL.getText().trim().equalsIgnoreCase("") ? null : txtTimDL.getText().trim());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
     }//GEN-LAST:event_btnGoBNActionPerformed
 
 //END BN PART
 
     private void btnThemmauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemmauActionPerformed
         // TODO add your handling code here:
+        insertM();
     }//GEN-LAST:event_btnThemmauActionPerformed
-
-    private void btnCapnhatmauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCapnhatmauActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCapnhatmauActionPerformed
 
     private void btnXoaMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaMauActionPerformed
         // TODO add your handling code here:
+        deleteM();
     }//GEN-LAST:event_btnXoaMauActionPerformed
 
     private void btnTimmauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimmauActionPerformed
         // TODO add your handling code here:
+        curPageM = 1;
+        rowM = 0;
+        fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
     }//GEN-LAST:event_btnTimmauActionPerformed
 
     private void txtTimmauKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimmauKeyReleased
         // TODO add your handling code here:
+        curPageM = 1;
+        rowM = 0;
+        fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
     }//GEN-LAST:event_txtTimmauKeyReleased
 
     private void tblMauMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMauMouseClicked
         // TODO add your handling code here:
+        rowM = tblMau.getSelectedRow();
+        if (rowM >= 0) {
+            showDetailM();
+        }
     }//GEN-LAST:event_tblMauMouseClicked
 
     private void btnHomeMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeMauActionPerformed
         // TODO add your handling code here:
+        curPageM = 1;
+        rowM = 0;
+        fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
     }//GEN-LAST:event_btnHomeMauActionPerformed
 
     private void btnBackMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackMauActionPerformed
         // TODO add your handling code here:
+        curPageM = curPageM > 1 ? curPageM - 1 : 1;
+        rowM = 0;
+        fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
     }//GEN-LAST:event_btnBackMauActionPerformed
 
     private void btnNextMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextMauActionPerformed
         // TODO add your handling code here:
+        curPageM = curPageM < pageM ? curPageM + 1 : pageM;
+        rowM = 0;
+        fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
     }//GEN-LAST:event_btnNextMauActionPerformed
 
     private void btnEndMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndMauActionPerformed
         // TODO add your handling code here:
+        curPageM = pageM;
+        rowM = 0;
+        fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
     }//GEN-LAST:event_btnEndMauActionPerformed
 
     private void btnGoMauActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoMauActionPerformed
         // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPosM.getText()) != curPageM
+                    && Integer.parseInt(txtPosM.getText()) > 0
+                    && Integer.parseInt(txtPosM.getText()) <= pageM) {
+                curPageM = Integer.parseInt(txtPosM.getText());
+                rowM = 0;
+                fillTableM(txtTimmau.getText().trim().equalsIgnoreCase("") ? null : txtTimmau.getText().trim());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
     }//GEN-LAST:event_btnGoMauActionPerformed
 
 //END M PART
@@ -1432,6 +1485,31 @@ public class TCT extends javax.swing.JDialog {
         txtViettatTH.setText(oldString.toUpperCase());
         evt.consume();
     }//GEN-LAST:event_txtViettatTHKeyReleased
+
+    private void txtTimDLKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimDLKeyTyped
+        // TODO add your handling code here:
+        if (Pattern.compile("[0-9]").matcher(String.valueOf(evt.getKeyChar())).matches() == false) {
+            fOk = false;
+            evt.consume();
+        }
+        fOk = true;
+    }//GEN-LAST:event_txtTimDLKeyTyped
+
+    private void txtDungluongKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDungluongKeyTyped
+        // TODO add your handling code here:
+        if (Pattern.compile("[0-9]").matcher(String.valueOf(evt.getKeyChar())).matches() == false) {
+            evt.consume();
+        }
+    }//GEN-LAST:event_txtDungluongKeyTyped
+
+    private void txtDungluongKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDungluongKeyPressed
+        // TODO add your handling code here:
+        oldStringBN = txtDungluong.getText();
+    }//GEN-LAST:event_txtDungluongKeyPressed
+
+    private void txtDungluongKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDungluongKeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDungluongKeyReleased
 
 //    /**
 //     * @param args the command line arguments
@@ -1480,9 +1558,7 @@ public class TCT extends javax.swing.JDialog {
     private javax.swing.JButton btnBackM;
     private javax.swing.JButton btnBackMau;
     private javax.swing.JButton btnBackTH;
-    private javax.swing.JButton btnCapnhatDL;
     private javax.swing.JButton btnCapnhatTH;
-    private javax.swing.JButton btnCapnhatmau;
     private javax.swing.JButton btnCapnhatmay;
     private javax.swing.JButton btnEndBN;
     private javax.swing.JButton btnEndM;
@@ -1589,7 +1665,6 @@ public class TCT extends javax.swing.JDialog {
 
     //TH part
     private void loadFormTH() {
-        thFind = "";
         thModel = (DefaultTableModel) tblThuonghieu.getModel();
         curPageTH = 1;
         itemPerPageTH = 3;
@@ -1695,8 +1770,8 @@ public class TCT extends javax.swing.JDialog {
                 curPageTH = 1;
                 rowTH = 0;
                 fillTableTH();
-                txtViettatTH.setText("");
-                txtTenTH.setText("");
+//                txtViettatTH.setText("");
+//                txtTenTH.setText("");
             }
         }
     }
@@ -1704,7 +1779,6 @@ public class TCT extends javax.swing.JDialog {
     //END TH part
     //TM part
     private void loadFormTM() {
-        tmFind = "";
         loadCombo();
         tmModel = (DefaultTableModel) tblTenmay.getModel();
         curPageTM = 1;
@@ -1796,7 +1870,8 @@ public class TCT extends javax.swing.JDialog {
                 break;
             }
         }
-        txtTenmay.setText(lstAllTM.get(showTM).getName());
+        oldName = lstAllTM.get(showTM).getName();
+        txtTenmay.setText(oldName);
         tblTenmay.setRowSelectionInterval(rowTM, rowTM);
     }
 
@@ -1810,12 +1885,12 @@ public class TCT extends javax.swing.JDialog {
             return;
         }
 
-        if (phoneNameDAO.select(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), txtTenmay.getText().trim(), "DHD")) != null) {
+        if (phoneNameDAO.select(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), txtTenmay.getText().trim(), "DHD", 0)) != null) {
             JOptionPane.showMessageDialog(this, "Đã có tên máy này");
             return;
         }
-
-        if (phoneNameDAO.insert(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), txtTenmay.getText().trim(), "DHD")) == false) {
+        String id = lstAllTH.get(cboTH.getSelectedIndex()).getId();
+        if (phoneNameDAO.insert(new PhoneName(id, txtTenmay.getText().trim(), "DHD", phoneNameDAO.nextName(id))) == false) {
             JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
         } else {
             fillTableTM();
@@ -1832,7 +1907,7 @@ public class TCT extends javax.swing.JDialog {
             return;
         }
 
-        if (phoneNameDAO.update(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), txtTenmay.getText().trim(), "DHD")) == false) {
+        if (phoneNameDAO.update(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), oldName, "DHD", 0), txtTenmay.getText().trim()) == false) {
             JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
         } else {
             fillTableTM();
@@ -1841,14 +1916,14 @@ public class TCT extends javax.swing.JDialog {
 
     private void deleteTM() {
         if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
-            if (phoneNameDAO.delete(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), lstAllTM.get(showTM).getName(), "KHD")) == false) {
+            if (phoneNameDAO.delete(new PhoneName(lstAllTH.get(cboTH.getSelectedIndex()).getId(), lstAllTM.get(showTM).getName(), "KHD", lstAllTM.get(showTM).getNum_order())) == false) {
                 JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
             } else {
                 curPageTH = 1;
                 rowTH = 0;
                 fillTableTM();
-                txtViettatTH.setText("");
-                txtTenTH.setText("");
+//                txtViettatTH.setText("");
+//                txtTenTH.setText("");
             }
         }
     }
@@ -1856,8 +1931,7 @@ public class TCT extends javax.swing.JDialog {
     //END TM part
     //BN part
     private void loadFormBN() {
-        bnFind = "";
-        bnModel = (DefaultTableModel) tblThuonghieu.getModel();
+        bnModel = (DefaultTableModel) tblBonho.getModel();
         curPageBN = 1;
         itemPerPageBN = 3;
         rowBN = 0;
@@ -1866,104 +1940,84 @@ public class TCT extends javax.swing.JDialog {
     }
 
     private void fillTableBN() {
-        fillTableTH(null);
+        fillTableBN(null);
     }
 
     private void fillTableBN(String find) {
-//        lstAllBN = producerDAO.selectAll();
-        int start = curPageTH * itemPerPageTH - itemPerPageTH, end = itemPerPageTH * curPageTH - 1;
-        if (lstAllTH == null) {
-            thModel.setRowCount(0);
-            thModel.fireTableDataChanged();
+        lstAllBN = memoryDAO.selectAll();
+        int start = curPageBN * itemPerPageBN - itemPerPageBN, end = itemPerPageBN * curPageBN - 1;
+        if (lstAllBN == null) {
+            bnModel.setRowCount(0);
+            bnModel.fireTableDataChanged();
             return;
         }
         if (find != null) {
-            if (rdoTenTH.isSelected()) {
-                for (int i = lstAllTH.size() - 1; i >= 0; i--) {
-                    if (Helper.Helper.removeAccent(lstAllTH.get(i).getName()).toLowerCase().contains(Helper.Helper.removeAccent(find).toLowerCase()) == false) {
-                        lstAllTH.remove(i);
-                    }
-                }
-            } else {
-                for (int i = lstAllTH.size() - 1; i >= 0; i--) {
-                    if (lstAllTH.get(i).getId().contains(Helper.Helper.removeAccent(find).toUpperCase()) == false) {
-                        lstAllTH.remove(i);
-                    }
+            for (int i = lstAllBN.size() - 1; i >= 0; i--) {
+                if (String.valueOf(lstAllBN.get(i).getAmount()).contains(find) == false) {
+                    lstAllBN.remove(i);
                 }
             }
         }
-        if (end > lstAllTH.size() - 1) {
-            end = lstAllTH.size() - 1;
+        if (end > lstAllBN.size() - 1) {
+            end = lstAllBN.size() - 1;
         }
-        if (lstAllTH.size() > 0) {
-            this.pageTH = (int) Math.ceil(lstAllTH.size() / (double) itemPerPageTH);
-            thModel.setRowCount(0);
+        if (lstAllBN.size() > 0) {
+            this.pageBN = (int) Math.ceil(lstAllBN.size() / (double) itemPerPageBN);
+            bnModel.setRowCount(0);
             for (int i = start; i <= end; i++) {
-                thModel.addRow(new Object[]{lstAllTH.get(i).getName(), lstAllTH.get(i).getId()});
+                bnModel.addRow(new Object[]{String.valueOf(lstAllBN.get(i).getAmount()) + " GB"});
             }
-            thModel.fireTableDataChanged();
-            txtPosTH.setText(String.valueOf(curPageTH));
-            lblPosTH.setText(String.valueOf(curPageTH) + "/" + String.valueOf(this.pageTH));
-            showDetail();
+            bnModel.fireTableDataChanged();
+            txtPosBN.setText(String.valueOf(curPageBN));
+            lblPosBN.setText(String.valueOf(curPageBN) + "/" + String.valueOf(this.pageBN));
+            showDetailBN();
         }
     }
 
     private void showDetailBN() {
-        txtViettatTH.setText((String) thModel.getValueAt(rowTH, 1));
-        txtTenTH.setText((String) thModel.getValueAt(rowTH, 0));
-        tblThuonghieu.setRowSelectionInterval(rowTH, rowTH);
+        showBN = (curPageBN - 1) * itemPerPageBN + rowBN;
+        txtDungluong.setText(String.valueOf(lstAllBN.get(showBN).getAmount()));
+        tblBonho.setRowSelectionInterval(rowBN, rowBN);
+        oldStringBN = txtDungluong.getText();
     }
 
     private void insertBN() {
-        if (txtViettatTH.getText().trim().length() != 2) {
-            JOptionPane.showMessageDialog(this, "Viết tắt phải là 2 ký tự");
+        try {
+            Integer.parseInt(txtDungluong.getText());
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Dung lượng bộ nhớ phải là một số nguyên");
             return;
         }
-        if (txtTenTH.getText().trim().length() <= 0) {
-            JOptionPane.showMessageDialog(this, "chưa nhập tên thương hiệu");
-            return;
-        }
-        for (Producer producer : lstAllTH) {
-            if (txtViettatTH.getText().equals(producer.getId())) {
-                JOptionPane.showMessageDialog(this, "Đã tồn tại viết tắt xin mời chọn viết tắt khác");
-                return;
+        Memory mmr = memoryDAO.select(new Memory(Integer.parseInt(txtDungluong.getText()), ""));
+        if (mmr != null) {
+            if (mmr.getStat().equals("DHD")) {
+                JOptionPane.showMessageDialog(this, "Đã tồn tại");
+            } else {
+                if (memoryDAO.update(new Memory(mmr.getAmount(), "DHD")) == false) {
+                    JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+                } else {
+                    fillTableBN();
+                }
+            }
+        } else {
+            if (memoryDAO.insert(new Memory(Integer.parseInt(txtDungluong.getText()), "DHD")) == false) {
+                JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+            } else {
+                fillTableBN();
             }
         }
 
-        if (producerDAO.insert(new Producer(txtViettatTH.getText().trim().toUpperCase(), txtTenTH.getText().trim(), "DHD")) == false) {
-            JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
-        } else {
-            fillTableTH();
-        }
-    }
-
-    private void updateBN() {
-        if (txtTenTH.getText().trim().length() <= 0) {
-            JOptionPane.showMessageDialog(this, "chưa nhập tên thương hiệu");
-            return;
-        }
-        if (txtViettatTH.getText().trim().equalsIgnoreCase((String) thModel.getValueAt(rowTH, 1)) == false) {
-            JOptionPane.showMessageDialog(this, "Không được sửa viết tắt");
-            return;
-        }
-
-        if (producerDAO.update(new Producer(txtViettatTH.getText().trim().toUpperCase(), txtTenTH.getText().trim(), "DHD")) == false) {
-            JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
-        } else {
-            fillTableTH();
-        }
     }
 
     private void deleteBN() {
         if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
-            if (producerDAO.delete(new Producer((String) thModel.getValueAt(rowTH, 1), "", "DA")) == false) {
+            if (memoryDAO.delete(new Memory(lstAllBN.get(showBN).getAmount(), "DHD")) == false) {
                 JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
             } else {
-                curPageTH = 1;
-                rowTH = 0;
-                fillTableTH();
-                txtViettatTH.setText("");
-                txtTenTH.setText("");
+                curPageBN = 1;
+                rowBN = 0;
+                fillTableBN();
+//                txtDungluong.setText("");
             }
         }
     }
@@ -1971,114 +2025,86 @@ public class TCT extends javax.swing.JDialog {
     //END BN part
     //M part
     private void loadFormM() {
-        thFind = "";
-        thModel = (DefaultTableModel) tblThuonghieu.getModel();
-        curPageTH = 1;
-        itemPerPageTH = 3;
-        rowTH = 0;
-        producerDAO = new ProducerDAO();
-        fillTableTH();
+        mModel = (DefaultTableModel) tblMau.getModel();
+        curPageM = 1;
+        itemPerPageM = 3;
+        rowM = 0;
+        colourDAO = new ColourDAO();
+        fillTableM();
     }
 
     private void fillTableM() {
-        fillTableTH(null);
+        fillTableM(null);
     }
 
     private void fillTableM(String find) {
-        lstAllTH = producerDAO.selectAll();
-        int start = curPageTH * itemPerPageTH - itemPerPageTH, end = itemPerPageTH * curPageTH - 1;
-        if (lstAllTH == null) {
-            thModel.setRowCount(0);
-            thModel.fireTableDataChanged();
+        lstAllM = colourDAO.selectAll();
+        int start = curPageM * itemPerPageM - itemPerPageM, end = itemPerPageM * curPageM - 1;
+        if (lstAllM == null) {
+            mModel.setRowCount(0);
+            mModel.fireTableDataChanged();
             return;
         }
         if (find != null) {
-            if (rdoTenTH.isSelected()) {
-                for (int i = lstAllTH.size() - 1; i >= 0; i--) {
-                    if (Helper.Helper.removeAccent(lstAllTH.get(i).getName()).toLowerCase().contains(Helper.Helper.removeAccent(find).toLowerCase()) == false) {
-                        lstAllTH.remove(i);
-                    }
-                }
-            } else {
-                for (int i = lstAllTH.size() - 1; i >= 0; i--) {
-                    if (lstAllTH.get(i).getId().contains(Helper.Helper.removeAccent(find).toUpperCase()) == false) {
-                        lstAllTH.remove(i);
-                    }
+            for (int i = lstAllM.size() - 1; i >= 0; i--) {
+                if (Helper.Helper.removeAccent(lstAllM.get(i).getName()).contains(Helper.Helper.removeAccent(find)) == false) {
+                    lstAllM.remove(i);
                 }
             }
         }
-        if (end > lstAllTH.size() - 1) {
-            end = lstAllTH.size() - 1;
+        if (end > lstAllM.size() - 1) {
+            end = lstAllM.size() - 1;
         }
-        if (lstAllTH.size() > 0) {
-            this.pageTH = (int) Math.ceil(lstAllTH.size() / (double) itemPerPageTH);
-            thModel.setRowCount(0);
+        if (lstAllM.size() > 0) {
+            this.pageM = (int) Math.ceil(lstAllM.size() / (double) itemPerPageM);
+            mModel.setRowCount(0);
             for (int i = start; i <= end; i++) {
-                thModel.addRow(new Object[]{lstAllTH.get(i).getName(), lstAllTH.get(i).getId()});
+                mModel.addRow(new Object[]{String.valueOf(lstAllM.get(i).getId()), lstAllM.get(i).getName()});
             }
-            thModel.fireTableDataChanged();
-            txtPosTH.setText(String.valueOf(curPageTH));
-            lblPosTH.setText(String.valueOf(curPageTH) + "/" + String.valueOf(this.pageTH));
-            showDetail();
+            mModel.fireTableDataChanged();
+            txtPosMau.setText(String.valueOf(curPageM));
+            lblPosMau.setText(String.valueOf(curPageM) + "/" + String.valueOf(this.pageM));
+            showDetailM();
         }
     }
 
     private void showDetailM() {
-        txtViettatTH.setText((String) thModel.getValueAt(rowTH, 1));
-        txtTenTH.setText((String) thModel.getValueAt(rowTH, 0));
-        tblThuonghieu.setRowSelectionInterval(rowTH, rowTH);
+        showM = (curPageM - 1) * itemPerPageM + rowM;
+        txtTenmau.setText((String) mModel.getValueAt(rowM, 1));
+        tblMau.setRowSelectionInterval(rowM, rowM);
+//        oldStringBN = txtDungluong.getText();
     }
 
     private void insertM() {
-        if (txtViettatTH.getText().trim().length() != 2) {
-            JOptionPane.showMessageDialog(this, "Viết tắt phải là 2 ký tự");
-            return;
-        }
-        if (txtTenTH.getText().trim().length() <= 0) {
-            JOptionPane.showMessageDialog(this, "chưa nhập tên thương hiệu");
-            return;
-        }
-        for (Producer producer : lstAllTH) {
-            if (txtViettatTH.getText().equals(producer.getId())) {
-                JOptionPane.showMessageDialog(this, "Đã tồn tại viết tắt xin mời chọn viết tắt khác");
-                return;
+        Colour cl = colourDAO.select(new Colour(0, txtTenmau.getText().trim(), "DHD"));
+        if (cl != null) {
+            if (cl.getStat().equals("DHD")) {
+                JOptionPane.showMessageDialog(this, "Đã tồn tại");
+            } else {
+                if (colourDAO.update(new Colour(cl.getId(), cl.getName(), "DHD")) == false) {
+                    JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+                } else {
+                    fillTableM();
+                }
             }
-        }
-
-        if (producerDAO.insert(new Producer(txtViettatTH.getText().trim().toUpperCase(), txtTenTH.getText().trim(), "DHD")) == false) {
-            JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
         } else {
-            fillTableTH();
-        }
-    }
-
-    private void updateM() {
-        if (txtTenTH.getText().trim().length() <= 0) {
-            JOptionPane.showMessageDialog(this, "chưa nhập tên thương hiệu");
-            return;
-        }
-        if (txtViettatTH.getText().trim().equalsIgnoreCase((String) thModel.getValueAt(rowTH, 1)) == false) {
-            JOptionPane.showMessageDialog(this, "Không được sửa viết tắt");
-            return;
-        }
-
-        if (producerDAO.update(new Producer(txtViettatTH.getText().trim().toUpperCase(), txtTenTH.getText().trim(), "DHD")) == false) {
-            JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
-        } else {
-            fillTableTH();
+            if (colourDAO.insert(new Colour(0, txtTenmau.getText().trim(), "DHD")) == false) {
+                JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+            } else {
+                fillTableM();
+            }
         }
     }
 
     private void deleteM() {
         if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
-            if (producerDAO.delete(new Producer((String) thModel.getValueAt(rowTH, 1), "", "DA")) == false) {
+            if (colourDAO.delete(new Colour(lstAllM.get(showM).getId(), "", "DHD")) == false) {
                 JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
             } else {
-                curPageTH = 1;
-                rowTH = 0;
-                fillTableTH();
-                txtViettatTH.setText("");
-                txtTenTH.setText("");
+                curPageM = 1;
+                rowM = 0;
+                fillTableM();
+//                txtTenmau.setText("");
             }
         }
     }

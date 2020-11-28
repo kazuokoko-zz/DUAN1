@@ -9,16 +9,19 @@ import DAO.ColourDAO;
 import DAO.MemoryDAO;
 import DAO.PhoneNameDAO;
 import DAO.ProducerDAO;
+import DAO.ProductDAO;
 import DAO.TypeDAO;
 import Model.Colour;
 import Model.Memory;
 import Model.PhoneName;
 import Model.Producer;
+import Model.Type;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -31,9 +34,13 @@ public class MSP extends javax.swing.JPanel {
     private ArrayList<PhoneName> pn;
     private ArrayList<Memory> mmr;
     private ArrayList<Colour> cl;
-    private ArrayList detail;
+    private ArrayList<Type> lst;
     private DefaultComboBoxModel thModel, pnModel, mModel, bntModel, bnrModel, romtModel, ramtModel;
     private DefaultTableModel model;
+    private int page, curPage, itemPerPage, row, show;
+    private TypeDAO typeDAO;
+    private ProductDAO productDAO;
+    private boolean loadOk;
 
     /**
      * Creates new form M
@@ -71,7 +78,6 @@ public class MSP extends javax.swing.JPanel {
         btnTBN = new javax.swing.JButton();
         btnTBN1 = new javax.swing.JButton();
         btnTM = new javax.swing.JButton();
-        btnLuu = new javax.swing.JButton();
         btnXoa = new javax.swing.JButton();
         cboRam = new javax.swing.JComboBox<>();
         cboMau = new javax.swing.JComboBox<>();
@@ -121,6 +127,11 @@ public class MSP extends javax.swing.JPanel {
 
         btnThem.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
         btnThem.setText("Thêm");
+        btnThem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnThemActionPerformed(evt);
+            }
+        });
 
         cboTH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboTH.addItemListener(new java.awt.event.ItemListener() {
@@ -137,6 +148,11 @@ public class MSP extends javax.swing.JPanel {
         });
 
         cboTM.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTM.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboTMItemStateChanged(evt);
+            }
+        });
 
         btnTTM.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
         btnTTM.addActionListener(new java.awt.event.ActionListener() {
@@ -146,6 +162,11 @@ public class MSP extends javax.swing.JPanel {
         });
 
         cboRom.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboRom.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboRomItemStateChanged(evt);
+            }
+        });
 
         btnTBN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Add.png"))); // NOI18N
         btnTBN.addActionListener(new java.awt.event.ActionListener() {
@@ -168,15 +189,27 @@ public class MSP extends javax.swing.JPanel {
             }
         });
 
-        btnLuu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Save.png"))); // NOI18N
-        btnLuu.setText("Lưu");
-
         btnXoa.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Delete.png"))); // NOI18N
         btnXoa.setText("Xóa");
+        btnXoa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXoaActionPerformed(evt);
+            }
+        });
 
         cboRam.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboRam.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboRamItemStateChanged(evt);
+            }
+        });
 
         cboMau.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboMau.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboMauItemStateChanged(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -192,15 +225,13 @@ public class MSP extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(btnThem, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnLuu, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
                         .addComponent(btnXoa, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(cboRom, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cboRom, 0, 326, Short.MAX_VALUE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnTBN))
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -261,7 +292,6 @@ public class MSP extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnThem)
-                    .addComponent(btnLuu)
                     .addComponent(btnXoa))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -287,12 +317,22 @@ public class MSP extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblData.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblDataMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblData);
 
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel16.setText("Trang:");
 
         btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
+        btnHome.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHomeActionPerformed(evt);
+            }
+        });
 
         lblPos.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         lblPos.setForeground(new java.awt.Color(255, 0, 51));
@@ -300,21 +340,52 @@ public class MSP extends javax.swing.JPanel {
         lblPos.setText("1/1");
 
         btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/back.png"))); // NOI18N
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Next.png"))); // NOI18N
+        btnNext.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNextActionPerformed(evt);
+            }
+        });
 
         btnEnd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/end.png"))); // NOI18N
+        btnEnd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEndActionPerformed(evt);
+            }
+        });
 
         txtPos.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtPos.setText("1");
 
         btnGo.setText("Đi đến");
+        btnGo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGoActionPerformed(evt);
+            }
+        });
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Tên máy");
 
+        txtTimT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtTimTKeyReleased(evt);
+            }
+        });
+
         btnTim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Search.png"))); // NOI18N
         btnTim.setText("Tìm");
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(rdoHD);
         rdoHD.setSelected(true);
@@ -446,6 +517,7 @@ public class MSP extends javax.swing.JPanel {
         // TODO add your handling code here:
         if (cboTH.getSelectedIndex() >= 0) {
             showPhoneName();
+            autoSTK();
         }
     }//GEN-LAST:event_cboTHItemStateChanged
 
@@ -474,13 +546,108 @@ public class MSP extends javax.swing.JPanel {
         addCT(3);
     }//GEN-LAST:event_btnTMActionPerformed
 
+    private void cboTMItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTMItemStateChanged
+        // TODO add your handling code here:
+        if (cboTM.getSelectedIndex() >= 0) {
+            autoSTK();
+        }
+    }//GEN-LAST:event_cboTMItemStateChanged
+
+    private void cboRomItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboRomItemStateChanged
+        // TODO add your handling code here:
+        if (cboRom.getSelectedIndex() >= 0) {
+            autoSTK();
+        }
+    }//GEN-LAST:event_cboRomItemStateChanged
+
+    private void cboRamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboRamItemStateChanged
+        // TODO add your handling code here:
+        if (cboRam.getSelectedIndex() >= 0) {
+            autoSTK();
+        }
+    }//GEN-LAST:event_cboRamItemStateChanged
+
+    private void cboMauItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboMauItemStateChanged
+        // TODO add your handling code here:
+        if (cboMau.getSelectedIndex() >= 0) {
+            autoSTK();
+        }
+    }//GEN-LAST:event_cboMauItemStateChanged
+
+    private void btnThemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnThemActionPerformed
+        // TODO add your handling code here:
+        insert();
+    }//GEN-LAST:event_btnThemActionPerformed
+
+    private void btnXoaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXoaActionPerformed
+        // TODO add your handling code here:
+        delete();
+    }//GEN-LAST:event_btnXoaActionPerformed
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+        curPage = 1;
+        filltable(rdoTC.isSelected());
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void txtTimTKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimTKeyReleased
+        // TODO add your handling code here:
+        curPage = 1;
+        filltable(rdoTC.isSelected());
+    }//GEN-LAST:event_txtTimTKeyReleased
+
+    private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
+        // TODO add your handling code here:
+        curPage = 1;
+        filltable(rdoTC.isSelected());
+    }//GEN-LAST:event_btnHomeActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        curPage = 1;
+        filltable(rdoTC.isSelected());
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
+        // TODO add your handling code here:
+        curPage = 1;
+        filltable(rdoTC.isSelected());
+    }//GEN-LAST:event_btnNextActionPerformed
+
+    private void btnEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndActionPerformed
+        // TODO add your handling code here:
+        curPage = 1;
+        filltable(rdoTC.isSelected());
+    }//GEN-LAST:event_btnEndActionPerformed
+
+    private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
+        // TODO add your handling code here:
+        row = tblData.getSelectedRow();
+        if (row >= 0) {
+            showDetail();
+        }
+    }//GEN-LAST:event_tblDataMouseClicked
+
+    private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
+        // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPos.getText()) != curPage
+                    && Integer.parseInt(txtPos.getText()) > 0
+                    && Integer.parseInt(txtPos.getText()) <= page) {
+                curPage = Integer.parseInt(txtPos.getText());
+                filltable(rdoTC.isSelected());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
+    }//GEN-LAST:event_btnGoActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnEnd;
     private javax.swing.JButton btnGo;
     private javax.swing.JButton btnHome;
-    private javax.swing.JButton btnLuu;
     private javax.swing.JButton btnNext;
     private javax.swing.JButton btnTBN;
     private javax.swing.JButton btnTBN1;
@@ -519,6 +686,28 @@ public class MSP extends javax.swing.JPanel {
     private javax.swing.JTextField txtSTK;
     private javax.swing.JTextField txtTimT;
     // End of variables declaration//GEN-END:variables
+
+    private void autoSTK() {
+        if (loadOk == false) {
+            return;
+        }
+        if (checkCbo()) {
+            txtSTK.setText(prd.get(cboTH.getSelectedIndex()).getId()
+                    + String.format("%03d", pn.get(cboTM.getSelectedIndex()).getNum_order()) + "-"
+                    + String.format("%05d", mmr.get(cboRom.getSelectedIndex()).getAmount()) + "-"
+                    + String.format("%02d", mmr.get(cboRam.getSelectedIndex()).getAmount()) + "-"
+                    + String.format("%03d", cl.get(cboMau.getSelectedIndex()).getId())
+            );
+        }
+    }
+
+    private boolean checkCbo() {
+        return cboTH.getSelectedIndex() >= 0
+                && cboTM.getSelectedIndex() >= 0
+                && cboRam.getSelectedIndex() >= 0
+                && cboRom.getSelectedIndex() >= 0
+                && cboMau.getSelectedIndex() >= 0;
+    }
 
     private void showTH() {
         thModel = new DefaultComboBoxModel();
@@ -569,38 +758,133 @@ public class MSP extends javax.swing.JPanel {
         romtModel.removeAllElements();
         ramtModel.removeAllElements();
         mmr = new MemoryDAO().selectAll();
+        ramtModel.addElement(null);
+        ramtModel.addElement(null);
         for (Memory t : mmr) {
             bntModel.addElement(t);
             bnrModel.addElement(t);
             romtModel.addElement(t);
             ramtModel.addElement(t);
-
         };
     }
 
-    private void fillTable(int page) {
-        int start = page * 10 - 10, end = 10 * page - 1;
-        detail = (new TypeDAO()).getAllDetail(rdoHD.isSelected() ? "KD" : "NB");
-        if (end > detail.size() - 1) {
-            end = detail.size() - 1;
+    private void fillTable() {
+        fillTable(null, false, null, null);
+    }
+
+    private void filltable(boolean findAll) {
+        row = 0;
+        fillTable(txtTimT.getText().trim().equalsIgnoreCase("") ? null : txtTimT.getText().trim(),
+                findAll,
+                cboRamT.getSelectedIndex() > 0 ? ramtModel.getElementAt(cboRamT.getSelectedIndex() - 1) : null,
+                cboRomT.getSelectedIndex() > 0 ? romtModel.getElementAt(cboRomT.getSelectedIndex() - 1) : null
+        );
+    }
+
+    private void fillTable(String find, boolean findAll, Integer ram, Integer rom) {
+        int start = curPage * itemPerPage - itemPerPage, end = itemPerPage * curPage - 1;
+        lst = typeDAO.selectAll();
+        if (lst == null) {
+            model.setRowCount(0);
+            model.fireTableDataChanged();
+            return;
         }
-        if (detail.size() > 0) {
+        if (find != null) {
+            for (int i = lst.size() - 1; i >= 0; i--) {
+                if (Helper.Helper.removeAccent(lst.get(i).getType_name()).contains(Helper.Helper.removeAccent(find)) == false) {
+                    lst.remove(i);
+                }
+            }
+        }
+        if (findAll == false) {
+            for (int i = lst.size() - 1; i >= 0; i--) {
+                if (lst.get(i).getType_id().equals("KD") == false) {
+                    lst.remove(i);
+                }
+            }
+        }
+        if (ram != null) {
+            for (int i = lst.size() - 1; i >= 0; i--) {
+                if (Integer.parseInt(lst.get(i).getType_id().substring(12, 14)) != ram) {
+                    lst.remove(i);
+                }
+            }
+        }
+        if (rom != null) {
+            for (int i = lst.size() - 1; i >= 0; i--) {
+                if (Integer.parseInt(lst.get(i).getType_id().substring(6, 11)) != rom) {
+                    lst.remove(i);
+                }
+            }
+        }
+        if (end > lst.size() - 1) {
+            end = lst.size() - 1;
+        }
+        if (lst.size() > 0) {
             model.setRowCount(0);
             for (int i = start; i <= end; i++) {
-                model.addRow(new Object[]{(String) ((ArrayList) detail.get(i)).get(0),
-                    (String) ((ArrayList) detail.get(i)).get(0),
-                    (int) ((ArrayList) detail.get(i)).get(0)});
+                model.addRow(new Object[]{lst.get(i).getType_id(), lst.get(i).getType_name(),
+                    productDAO.getNumOfPhoneInStorage(lst.get(i).getType_id())});
             }
             model.fireTableDataChanged();
+            txtPos.setText(String.valueOf(curPage));
+            lblPos.setText(String.valueOf(curPage) + "/" + String.valueOf(page));
+            showDetail();
         }
     }
 
+    private void showDetail() {
+        show = (curPage - 1) * itemPerPage + row;
+        String id = (String) model.getValueAt(row, 0);
+        for (int i = 0; i < prd.size(); i++) {
+            if (id.substring(0, 2).equals(prd.get(i).getId())) {
+                cboTH.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < pn.size(); i++) {
+            if (Integer.parseInt(id.substring(2, 6)) == pn.get(i).getNum_order()) {
+                cboTM.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < mmr.size(); i++) {
+            if (Integer.parseInt(id.substring(12, 14)) == mmr.get(i).getAmount()) {
+                cboRam.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < pn.size(); i++) {
+            if (Integer.parseInt(id.substring(6, 11)) == mmr.get(i).getAmount()) {
+                cboRom.setSelectedIndex(i);
+                break;
+            }
+        }
+        for (int i = 0; i < pn.size(); i++) {
+            if (Integer.parseInt(id.substring(15, 18)) == cl.get(i).getId()) {
+                cboMau.setSelectedIndex(i);
+                break;
+            }
+        }
+        lblPos.setText(id);
+
+    }
+
     private void loadPanelData() {
+        loadOk = false;
+        typeDAO = new TypeDAO();
+        productDAO = new ProductDAO();
         showTH();
         showMemory();
         showColour();
         cboTH.setSelectedIndex(0);
-        fillTable(1);
+        row = 0;
+        curPage = 1;
+        itemPerPage = 3;
+        model = (DefaultTableModel) tblData.getModel();
+        fillTable();
+        loadOk = true;
+        autoSTK();
     }
 
     private void addCT(int openTab) {
@@ -613,5 +897,44 @@ public class MSP extends javax.swing.JPanel {
             }
 
         });
+    }
+
+    private void insert() {
+        String name = (String) cboTH.getSelectedItem() + " "
+                + (String) cboTM.getSelectedItem() + " "
+                + (String) cboTM.getSelectedItem() + " Ram "
+                + (String) cboTM.getSelectedItem() + " Màu "
+                + (String) cboTM.getSelectedItem();
+        Type type = typeDAO.select(new Type(txtSTK.getText(), name, "DHD"));
+        if (type != null) {
+            if (type.getType_stat().equals("DHD")) {
+                JOptionPane.showMessageDialog(this, "Đã tồn tại");
+            } else {
+                if (typeDAO.update(new Type(txtSTK.getText(), name, "DHD")) == false) {
+                    JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+                } else {
+                    fillTable();
+                }
+            }
+        } else {
+            if (typeDAO.insert(new Type(txtSTK.getText(), name, "DHD")) == false) {
+                JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+            } else {
+                fillTable();
+            }
+        }
+    }
+
+    private void delete() {
+        if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
+            if (typeDAO.delete(new Type(lst.get(show).getType_id(), "", "DHD")) == false) {
+                JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
+            } else {
+                curPage = 1;
+                row = 0;
+                fillTable();
+//                txtTenmau.setText("");
+            }
+        }
     }
 }

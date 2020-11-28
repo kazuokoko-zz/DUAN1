@@ -31,11 +31,11 @@ public class Colour {
         this.id = id;
     }
 
-    public String getAmount() {
+    public String getName() {
         return name;
     }
 
-    public void setAmount(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 

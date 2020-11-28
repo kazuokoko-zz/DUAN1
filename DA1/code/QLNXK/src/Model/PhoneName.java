@@ -12,14 +12,16 @@ package Model;
 public class PhoneName {
 
     private String id, name, stat;
+    private int num_order;
 
     public PhoneName() {
     }
 
-    public PhoneName(String id, String name, String stat) {
+    public PhoneName(String id, String name, String stat, int num_order) {
         this.id = id;
         this.name = name;
         this.stat = stat;
+        this.num_order = num_order;
     }
 
     public String getId() {
@@ -44,6 +46,14 @@ public class PhoneName {
 
     public void setStat(String stat) {
         this.stat = stat;
+    }
+
+    public int getNum_order() {
+        return num_order;
+    }
+
+    public void setNum_order(int num_order) {
+        this.num_order = num_order;
     }
 
     @Override
