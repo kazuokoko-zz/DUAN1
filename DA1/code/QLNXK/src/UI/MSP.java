@@ -636,7 +636,7 @@ public class MSP extends javax.swing.JPanel {
                 curPage = Integer.parseInt(txtPos.getText());
                 fillTable(rdoTC.isSelected());
             }
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
         }
     }//GEN-LAST:event_btnGoActionPerformed
