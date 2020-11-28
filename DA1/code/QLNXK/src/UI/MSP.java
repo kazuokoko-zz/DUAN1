@@ -20,7 +20,6 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -887,7 +886,7 @@ public class MSP extends javax.swing.JPanel {
     }
 
     private void addCT(int openTab) {
-        TCT tct = new TCT((JFrame) this.getTopLevelAncestor(), true, openTab);
+        TCT tct = new TCT((javax.swing.JFrame) this.getTopLevelAncestor(), true, openTab);
         tct.setVisible(true);
         tct.addWindowListener(new WindowAdapter() {
             @Override
