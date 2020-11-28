@@ -716,7 +716,7 @@ public class MSP extends javax.swing.JPanel {
         prd = new ProducerDAO().selectAll();
         for (Producer t : prd) {
             thModel.addElement(t);
-        };
+        }
     }
 
     private void showPhoneName() {
@@ -731,7 +731,7 @@ public class MSP extends javax.swing.JPanel {
             for (PhoneName t : pn) {
                 pnModel.addElement(t);
             }
-        };
+        }
     }
 
     private void showColour() {
@@ -741,7 +741,7 @@ public class MSP extends javax.swing.JPanel {
         cl = new ColourDAO().selectAll();
         for (Colour t : cl) {
             mModel.addElement(t);
-        };
+        }
     }
 
     private void showMemory() {
@@ -765,7 +765,7 @@ public class MSP extends javax.swing.JPanel {
             bnrModel.addElement(t);
             romtModel.addElement(t);
             ramtModel.addElement(t);
-        };
+        }
     }
 
     private void fillTable() {
@@ -774,8 +774,7 @@ public class MSP extends javax.swing.JPanel {
 
     private void filltable(boolean findAll) {
         row = 0;
-        fillTable(txtTimT.getText().trim().equalsIgnoreCase("") ? null : txtTimT.getText().trim(),
-                findAll,
+        fillTable(txtTimT.getText().trim().equalsIgnoreCase("") ? null : txtTimT.getText().trim(), findAll,
                 cboRamT.getSelectedIndex() > 0 ? ramtModel.getElementAt(cboRamT.getSelectedIndex() - 1) : null,
                 cboRomT.getSelectedIndex() > 0 ? romtModel.getElementAt(cboRomT.getSelectedIndex() - 1) : null
         );
@@ -933,7 +932,6 @@ public class MSP extends javax.swing.JPanel {
                 curPage = 1;
                 row = 0;
                 fillTable();
-//                txtTenmau.setText("");
             }
         }
     }
