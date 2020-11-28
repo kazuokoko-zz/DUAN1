@@ -299,9 +299,6 @@ public class MSP extends javax.swing.JPanel {
 
         tblData.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
                 {null, null, null}
             },
             new String [] {
@@ -880,6 +877,8 @@ public class MSP extends javax.swing.JPanel {
         curPage = 1;
         itemPerPage = 3;
         model = (DefaultTableModel) tblData.getModel();
+        model.setRowCount(0);
+        model.fireTableDataChanged();
         fillTable();
         loadOk = true;
         autoSTK();
