@@ -586,37 +586,37 @@ public class MSP extends javax.swing.JPanel {
     private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
         // TODO add your handling code here:
         curPage = 1;
-        filltable(rdoTC.isSelected());
+        fillTable(rdoTC.isSelected());
     }//GEN-LAST:event_btnTimActionPerformed
 
     private void txtTimTKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTimTKeyReleased
         // TODO add your handling code here:
         curPage = 1;
-        filltable(rdoTC.isSelected());
+        fillTable(rdoTC.isSelected());
     }//GEN-LAST:event_txtTimTKeyReleased
 
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
         // TODO add your handling code here:
         curPage = 1;
-        filltable(rdoTC.isSelected());
+        fillTable(rdoTC.isSelected());
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         curPage = 1;
-        filltable(rdoTC.isSelected());
+        fillTable(rdoTC.isSelected());
     }//GEN-LAST:event_btnBackActionPerformed
 
     private void btnNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextActionPerformed
         // TODO add your handling code here:
         curPage = 1;
-        filltable(rdoTC.isSelected());
+        fillTable(rdoTC.isSelected());
     }//GEN-LAST:event_btnNextActionPerformed
 
     private void btnEndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndActionPerformed
         // TODO add your handling code here:
         curPage = 1;
-        filltable(rdoTC.isSelected());
+        fillTable(rdoTC.isSelected());
     }//GEN-LAST:event_btnEndActionPerformed
 
     private void tblDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDataMouseClicked
@@ -634,7 +634,7 @@ public class MSP extends javax.swing.JPanel {
                     && Integer.parseInt(txtPos.getText()) > 0
                     && Integer.parseInt(txtPos.getText()) <= page) {
                 curPage = Integer.parseInt(txtPos.getText());
-                filltable(rdoTC.isSelected());
+                fillTable(rdoTC.isSelected());
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
@@ -771,11 +771,11 @@ public class MSP extends javax.swing.JPanel {
         fillTable(null, false, null, null);
     }
 
-    private void filltable(boolean findAll) {
+    private void fillTable(boolean findAll) {
         row = 0;
         fillTable(txtTimT.getText().trim().equalsIgnoreCase("") ? null : txtTimT.getText().trim(), findAll,
-                cboRamT.getSelectedIndex() > 0 ? ramtModel.getElementAt(cboRamT.getSelectedIndex() - 1) : null,
-                cboRomT.getSelectedIndex() > 0 ? romtModel.getElementAt(cboRomT.getSelectedIndex() - 1) : null
+                (cboRamT.getSelectedIndex() > 0 ? ramtModel.getElementAt(cboRamT.getSelectedIndex() - 1) : null),
+                (cboRomT.getSelectedIndex() > 0 ? romtModel.getElementAt(cboRomT.getSelectedIndex() - 1) : null)
         );
     }
 
@@ -898,24 +898,24 @@ public class MSP extends javax.swing.JPanel {
     }
 
     private void insert() {
-        String name = (String) cboTH.getSelectedItem() + " "
-                + (String) cboTM.getSelectedItem() + " "
-                + (String) cboTM.getSelectedItem() + " Ram "
-                + (String) cboTM.getSelectedItem() + " Màu "
-                + (String) cboTM.getSelectedItem();
-        Type type = typeDAO.select(new Type(txtSTK.getText(), name, "DHD"));
+        String name = ((Producer) thModel.getElementAt(cboTH.getSelectedIndex())).getId() + " "
+                + ((PhoneName) pnModel.getElementAt(cboTM.getSelectedIndex())).getName() + " "
+                + ((Memory) bntModel.getElementAt(cboRom.getSelectedIndex())).toString() + " Ram "
+                + ((Memory) bnrModel.getElementAt(cboRam.getSelectedIndex())).toString() + " Màu "
+                + ((Colour) mModel.getElementAt(cboMau.getSelectedIndex())).getName();
+        Type type = typeDAO.select(new Type(txtSTK.getText(), name, "KD"));
         if (type != null) {
-            if (type.getType_stat().equals("DHD")) {
+            if (type.getType_stat().equals("KD")) {
                 JOptionPane.showMessageDialog(this, "Đã tồn tại");
             } else {
-                if (typeDAO.update(new Type(txtSTK.getText(), name, "DHD")) == false) {
+                if (typeDAO.update(new Type(txtSTK.getText(), name, "KD")) == false) {
                     JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
                 } else {
                     fillTable();
                 }
             }
         } else {
-            if (typeDAO.insert(new Type(txtSTK.getText(), name, "DHD")) == false) {
+            if (typeDAO.insert(new Type(txtSTK.getText(), name, "KD")) == false) {
                 JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
             } else {
                 fillTable();
@@ -925,7 +925,7 @@ public class MSP extends javax.swing.JPanel {
 
     private void delete() {
         if (JOptionPane.showConfirmDialog(this, "Xác nhận xóa? không thể hoàn tác.") == JOptionPane.YES_OPTION) {
-            if (typeDAO.delete(new Type(lst.get(show).getType_id(), "", "DHD")) == false) {
+            if (typeDAO.delete(new Type(lst.get(show).getType_id(), "", "NB")) == false) {
                 JOptionPane.showMessageDialog(this, "có lỗi xảy ra. chạy lại chương trình");
             } else {
                 curPage = 1;

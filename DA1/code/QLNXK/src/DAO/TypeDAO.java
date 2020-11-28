@@ -19,18 +19,66 @@ import java.util.ArrayList;
 public class TypeDAO implements DAO_Interface<Type> {
 
     @Override
-    public boolean insert(Type e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean insert(Type type) {
+        String sql = "insert into types(type_id,type_name,type_stat)\n"
+                + "values (?,?,?)";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, type.getType_id());
+            stm.setNString(2, type.getType_name());
+            stm.setNString(3, type.getType_stat());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public boolean update(Type e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean update(Type type) {
+        String sql = "update types\n"
+                + "set type_stat = 'KD'\n"
+                + "where type_id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, type.getType_stat());
+            stm.setNString(2, type.getType_id());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
-    public boolean delete(Type e) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean delete(Type type) {
+        String sql = "update types\n"
+                + "set type_stat = 'NB'\n"
+                + "where type_id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, type.getType_stat());
+            stm.setNString(2, type.getType_id());
+
+            int i = stm.executeUpdate();
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     @Override
