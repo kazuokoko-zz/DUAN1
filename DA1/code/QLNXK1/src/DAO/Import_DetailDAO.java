@@ -110,7 +110,7 @@ public class Import_DetailDAO implements DAO_Interface<Import_Detail> {
     public int getMonthImportCount() {
         String sql = "select Sum(imd_amount) as sl \n" +
                 "from import_detail inner join imports on imports.im_id = import_detail.im_id\n" +
-                "where month(getDate()) = month(im_date) and year(getdate())=year(im_date)";
+                "where month(getDate()) = month(im_date) and year(getdate())=year(im_date) and im_stat like 'DNX'";
         try {
             Statement stm = Helper.connection.createStatement();
             ResultSet rs = stm.executeQuery(sql);

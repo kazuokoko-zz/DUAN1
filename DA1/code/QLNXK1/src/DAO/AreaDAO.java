@@ -121,6 +121,23 @@ public class AreaDAO implements DAO_Interface<Area> {
             return null;
         }
     }
-    
+
+    public String getAreaName(String id) {
+        String sql = "select name from AREAS\n"
+                + "where id like ?";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getNString("name");
+            } else {
+                return "";
+            }
+
+        } catch (Exception e) {
+            return "";
+        }
+    }
 
 }

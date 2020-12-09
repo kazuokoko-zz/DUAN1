@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -108,7 +110,7 @@ public class ImportDAO implements DAO_Interface<Import> {
 
     public boolean confirm(Import anImport) {
         String sql = "update imports\n"
-                + "set im_stat = 'DND',im_deliver = ?,im_checker = ?\n"
+                + "set im_stat = 'NDH',im_deliver = ?,im_checker = ?\n"
                 + "where im_id like ?";
         try {
             PreparedStatement stm = Helper.connection.prepareStatement(sql);
@@ -128,13 +130,33 @@ public class ImportDAO implements DAO_Interface<Import> {
         }
     }
 
+    public boolean closeEdit(Import anImport) {
+        String sql = "update imports\n"
+                + "set im_stat = 'DNX'\n"
+                + "where im_id like ?";
+        try {
+            PreparedStatement stm = Helper.connection.prepareStatement(sql);
+            stm.setNString(1, anImport.getIm_id());
+            int i = stm.executeUpdate();
+
+            if (i > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+            return false;
+        }
+    }
+
     public ArrayList<Import> getConfirmedImport() {
         ArrayList<Import> lst = new ArrayList<>();
         String sql = "select * from imports\n"
                 + "where im_id in (select distinct imports.im_id\n"
                 + "from imports left outer join products on imports.im_id = products.im_id\n"
                 + "inner join import_detail on imports.im_id = import_detail.im_id\n"
-                + "where im_stat like N'DND'"
+                + "where im_stat like N'NDH'"
                 + "group by imports.im_id\n"
                 + "having not(count(products.im_id) = sum(import_detail.imd_amount)))";
 
@@ -160,7 +182,7 @@ public class ImportDAO implements DAO_Interface<Import> {
         ArrayList r = new ArrayList();
         String sql = "select count(imports.sup_id) as sl, iif(sum(im_sum_price) is null,0.0,sum(im_sum_price)) as tt\n"
                 + " from suppliers left outer join imports on suppliers.sup_id = imports.sup_id\n"
-                + "where suppliers.sup_id = ? and im_stat like 'DND'";
+                + "where suppliers.sup_id = ? and im_stat like 'DNX'";
         try {
             PreparedStatement stm = Helper.connection.prepareStatement(sql);
             stm.setInt(1, sup_id);
@@ -177,7 +199,8 @@ public class ImportDAO implements DAO_Interface<Import> {
     }
 
     public Date getNearestImportDate() {
-        String sql = "select MAX(im_date) as d from imports";
+        String sql = "select MAX(im_date) as d from imports\n"
+                + "where im_stat like 'DNX'";
         try {
             Statement stm = Helper.connection.createStatement();
             ResultSet rs = stm.executeQuery(sql);
@@ -191,7 +214,7 @@ public class ImportDAO implements DAO_Interface<Import> {
 
     public Integer getThisMonthImportCount() {
         String sql = "select count(*) as sl from imports\n"
-                + "where month(getDate()) = month(im_date) and year(getdate())=year(im_date)";
+                + "where month(getDate()) = month(im_date) and year(getdate())=year(im_date) and im_stat like 'DNX'";
         try {
             Statement stm = Helper.connection.createStatement();
             ResultSet rs = stm.executeQuery(sql);
@@ -237,4 +260,44 @@ public class ImportDAO implements DAO_Interface<Import> {
         }
     }
 
+    public ArrayList<Import> getList() {
+        return getList(null, null, null, null);
+    }
+
+    public ArrayList<Import> getList(String im_id, String sup_name, Date from, Date to) {
+        ArrayList<Import> l = new ArrayList<>();
+        String sql = "select IMPORTS.im_id as im_id,im_date,im_sum_price,im_checker,im_deliver,im_stat,[user],Imports.sup_id as sup_id\n"
+                + " from IMPORTS inner join SUPPLIERS on IMPORTS.sup_id = SUPPLIERS.sup_id\n"
+                + " where im_id like ? and dbo.f_RemoveAccent(sup_name) like dbo.f_RemoveAccent(?) and ( im_date  between ? and ?)\n"
+                + "order by imports.im_stat desc, imports.im_date desc";
+        try {
+            String id = im_id == null ? "%" : "%" + im_id + "%";
+            String name = sup_name == null ? "%" : "%" + sup_name + "%";
+            String fdate = from == null ? "1900-01-01" : new SimpleDateFormat("yyyy-MM-dd").format(from);
+            String tdate = to == null ? new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusDays(1).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))
+                    : new SimpleDateFormat("yyyy-MM-dd").format(to);
+
+            PreparedStatement stm = Helper.connection.prepareStatement(sql);
+            stm.setNString(1, id);
+            stm.setNString(2, name);
+            stm.setNString(3, fdate);
+            stm.setNString(4, tdate);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                l.add(new Import(
+                        rs.getNString("im_id"),
+                        rs.getDate("im_date"),
+                        rs.getNString("user"),
+                        rs.getNString("im_checker"),
+                        rs.getNString("im_deliver"),
+                        rs.getInt("sup_id"),
+                        rs.getDouble("im_sum_price"),
+                        rs.getNString("im_stat")));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return l;
+    }
 }

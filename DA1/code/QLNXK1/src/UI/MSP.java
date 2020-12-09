@@ -779,7 +779,7 @@ public class MSP extends javax.swing.JPanel {
 
     private void fillTable(String find, boolean findAll, Integer ram, Integer rom) {
         int start = curPage * itemPerPage - itemPerPage, end = itemPerPage * curPage - 1;
-        lst = typeDAO.selectAll();
+        lst = typeDAO.selectAll(true);
         if (lst == null) {
             model.setRowCount(0);
             model.fireTableDataChanged();

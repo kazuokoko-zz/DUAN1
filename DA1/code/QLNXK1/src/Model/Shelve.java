@@ -5,6 +5,8 @@
  */
 package Model;
 
+import DAO.AreaDAO;
+
 /**
  *
  * @author ma-user
@@ -41,5 +43,9 @@ public class Shelve {
     @Override
     public String toString() {
         return "Kệ " + shel_id.substring(4, 8);
+    }
+
+    public String toStringName() {
+        return Helper.Helper.toShelveName(shel_id);
     }
 }

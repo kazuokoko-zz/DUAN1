@@ -20,7 +20,7 @@ public class Import {
     public Import() {
     }
 
-    public Import(String im_id, Date im_date, String user, String im_checker, String im_deliver, int sup_id, double im_sum_price, String im_stat ) {
+    public Import(String im_id, Date im_date, String user, String im_checker, String im_deliver, int sup_id, double im_sum_price, String im_stat) {
         this.im_id = im_id;
         this.im_date = im_date;
         this.user = user;
@@ -28,7 +28,7 @@ public class Import {
         this.im_deliver = im_deliver;
         this.sup_id = sup_id;
         this.im_sum_price = im_sum_price;
-        this.im_stat =im_stat;
+        this.im_stat = im_stat;
     }
 
     public String getIm_checker() {
@@ -93,5 +93,10 @@ public class Import {
 
     public void setIm_stat(String im_stat) {
         this.im_stat = im_stat;
+    }
+
+    @Override
+    public String toString() {
+        return im_id;
     }
 }

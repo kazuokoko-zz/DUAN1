@@ -5,18 +5,21 @@
  */
 package Model;
 
+import java.util.Date;
+
 /**
  *
  * @author ma-user
  */
 public class Export {
 
-    private String ex_id, ex_date, user, ex_type, ex_receiver, ex_publisher;
+    private String ex_id, user, ex_type, ex_receiver, ex_publisher;
+    private Date ex_date;
 
     public Export() {
     }
 
-    public Export(String ex_id, String ex_date, String user, String ex_type, String ex_receiver, String ex_publisher) {
+    public Export(String ex_id, Date ex_date, String user, String ex_type, String ex_receiver, String ex_publisher) {
         this.ex_id = ex_id;
         this.ex_date = ex_date;
         this.user = user;
@@ -25,7 +28,7 @@ public class Export {
         this.ex_publisher = ex_publisher;
     }
 
-    public String getEx_date() {
+    public Date getEx_date() {
         return ex_date;
     }
 
@@ -49,7 +52,7 @@ public class Export {
         return user;
     }
 
-    public void setEx_date(String ex_date) {
+    public void setEx_date(Date ex_date) {
         this.ex_date = ex_date;
     }
 

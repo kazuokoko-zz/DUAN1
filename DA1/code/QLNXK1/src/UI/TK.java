@@ -5,17 +5,55 @@
  */
 package UI;
 
+import DAO.ExportDAO;
+import DAO.ImportDAO;
+import DAO.MemoryDAO;
+import DAO.PhoneNameDAO;
+import DAO.ProducerDAO;
+import DAO.ProductDAO;
+import DAO.SupplierDAO;
+import DAO.TypeDAO;
+import Helper.Helper;
+import Model.Export;
+import Model.Import;
+import Model.Memory;
+import Model.PhoneName;
+import Model.Producer;
+import Model.Product;
+import Model.Type;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author ma-user
  */
 public class TK extends javax.swing.JPanel {
 
+    public static int tab;
+    private boolean tabLoaded;
+
     /**
      * Creates new form M
      */
     public TK() {
+        this(1);
+    }
+
+    public TK(int tab) {
+        tabLoaded = false;
         initComponents();
+        this.tab = tab;
+        loadTab(tab);
+        tabLoaded = true;
     }
 
     /**
@@ -28,7 +66,7 @@ public class TK extends javax.swing.JPanel {
     private void initComponents() {
 
         jtpTK = new javax.swing.JTabbedPane();
-        jtbTN = new javax.swing.JTabbedPane();
+        jtpTN = new javax.swing.JTabbedPane();
         jpnNK = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -53,7 +91,6 @@ public class TK extends javax.swing.JPanel {
         txtPosN = new javax.swing.JTextField();
         btnGoN = new javax.swing.JButton();
         btnXCTN = new javax.swing.JButton();
-        btnSN = new javax.swing.JButton();
         jpnXK = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
@@ -103,6 +140,18 @@ public class TK extends javax.swing.JPanel {
         btnGoSP = new javax.swing.JButton();
         btnXCTSP = new javax.swing.JButton();
 
+        jtpTK.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jtpTKStateChanged(evt);
+            }
+        });
+
+        jtpTN.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jtpTNStateChanged(evt);
+            }
+        });
+
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Tìm kiếm"));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
@@ -118,8 +167,18 @@ public class TK extends javax.swing.JPanel {
         jLabel4.setText("Đến:");
 
         btnTN.setText("Tìm");
+        btnTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTNActionPerformed(evt);
+            }
+        });
 
         btnRN.setText("Reset");
+        btnRN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRNActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -176,27 +235,29 @@ public class TK extends javax.swing.JPanel {
 
         tblN.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Mã hóa đơn", "Nhà cung cấp", "Ngày nhập"
+                "Mã hóa đơn", "Nhà cung cấp", "Ngày nhập", "Trạng thái"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tblN.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblNMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tblN);
-        if (tblN.getColumnModel().getColumnCount() > 0) {
-            tblN.getColumnModel().getColumn(1).setHeaderValue("Nhà cung cấp");
-        }
 
         btnHomeN.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
         btnHomeN.addActionListener(new java.awt.event.ActionListener() {
@@ -245,8 +306,11 @@ public class TK extends javax.swing.JPanel {
         });
 
         btnXCTN.setText("Xem chi tiết");
-
-        btnSN.setText("Sửa");
+        btnXCTN.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXCTNActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -273,8 +337,6 @@ public class TK extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnGoN)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnSN, javax.swing.GroupLayout.PREFERRED_SIZE, 113, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnXCTN, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
@@ -296,8 +358,7 @@ public class TK extends javax.swing.JPanel {
                             .addComponent(btnBackN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnNextN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnEndN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnGoN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(btnSN, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnGoN, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
 
@@ -322,7 +383,7 @@ public class TK extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jtbTN.addTab("Tìm hóa đơn nhập", jpnNK);
+        jtpTN.addTab("Tìm hóa đơn nhập", jpnNK);
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder("Tìm kiếm"));
 
@@ -336,8 +397,18 @@ public class TK extends javax.swing.JPanel {
         jLabel8.setText("Đến:");
 
         btnTX.setText("Tìm");
+        btnTX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTXActionPerformed(evt);
+            }
+        });
 
         btnRX.setText("Reset");
+        btnRX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRXActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -405,6 +476,11 @@ public class TK extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblX.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblXMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tblX);
 
         btnHomeX.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
@@ -454,6 +530,11 @@ public class TK extends javax.swing.JPanel {
         });
 
         btnXCTX.setText("Xem chi tiết");
+        btnXCTX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXCTXActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -526,9 +607,9 @@ public class TK extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jtbTN.addTab("Tìm hóa đơn xuất", jpnXK);
+        jtpTN.addTab("Tìm hóa đơn xuất", jpnXK);
 
-        jtpTK.addTab("Tìm hóa đơn", jtbTN);
+        jtpTK.addTab("Tìm hóa đơn", jtpTN);
 
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Tìm kiếm"));
 
@@ -542,8 +623,18 @@ public class TK extends javax.swing.JPanel {
         jLabel10.setText("Ram:");
 
         btnTSP.setText("Tìm");
+        btnTSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTSPActionPerformed(evt);
+            }
+        });
 
         btnRSP.setText("Reset");
+        btnRSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRSPActionPerformed(evt);
+            }
+        });
 
         cboTH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -635,6 +726,11 @@ public class TK extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        tblSP.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblSPMouseClicked(evt);
+            }
+        });
         jScrollPane3.setViewportView(tblSP);
 
         btnHomeSP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/home.png"))); // NOI18N
@@ -684,6 +780,11 @@ public class TK extends javax.swing.JPanel {
         });
 
         btnXCTSP.setText("Xem chi tiết");
+        btnXCTSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXCTSPActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -767,63 +868,192 @@ public class TK extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTNActionPerformed
+        // TODO add your handling code here:
+        int lenBefor, lenAfter;
+        String f = txtNCCN.getText().trim();
+        do {
+            lenBefor = f.length();
+            f = f.replaceAll("  ", " ");
+            lenAfter = f.length();
+        } while (lenBefor != lenAfter);
+        lstNK = importDAO.getList(txtMHDN.getText().trim().equals("") ? null : txtMHDN.getText().trim(), f, jdtFromN.getDate(),
+                Date.from((jdtToN.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1)).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+        curPageN = 1;
+        fillTableNK();
+    }//GEN-LAST:event_btnTNActionPerformed
+
+    private void btnRNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRNActionPerformed
+        // TODO add your handling code here:
+        txtMHDN.setText("");
+        txtNCCN.setText("");
+        lstNK = importDAO.getList();
+        curPageN = 1;
+        fillTableNK();
+    }//GEN-LAST:event_btnRNActionPerformed
+
+    private void tblNMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblNMouseClicked
+        // TODO add your handling code here:
+        rowN = tblN.getSelectedRow();
+        if (rowN >= 0) {
+            showN = (curPageN - 1) * itemPerPageN + rowN;
+            btnXCTN.setText(lstNK.get(showN).getIm_stat().equals("TM") ? "Chỉnh sửa" : "Xem chi tiết");
+        }
+    }//GEN-LAST:event_tblNMouseClicked
+
     private void btnHomeNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeNActionPerformed
         // TODO add your handling code here:
-//        curPage = 1;
-//        fillTable(rdoTC.isSelected());
+        curPageN = 1;
+        fillTableNK();
     }//GEN-LAST:event_btnHomeNActionPerformed
 
     private void btnBackNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackNActionPerformed
         // TODO add your handling code here:
-//        curPage = curPage > 1 ? curPage - 1 : 1;
-//        fillTable(rdoTC.isSelected());
+        curPageN = curPageN > 1 ? curPageN - 1 : 1;
+        fillTableNK();
     }//GEN-LAST:event_btnBackNActionPerformed
 
     private void btnNextNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextNActionPerformed
         // TODO add your handling code here:
-//        curPage = curPage < page ? curPage + 1 : page;
-//        fillTable(rdoTC.isSelected());
+        curPageN = curPageN < pageN ? curPageN + 1 : pageN;
+        fillTableNK();
     }//GEN-LAST:event_btnNextNActionPerformed
 
     private void btnEndNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndNActionPerformed
         // TODO add your handling code here:
-//        curPage = page;
-//        fillTable(rdoTC.isSelected());
+        curPageN = pageN;
+        fillTableNK();
     }//GEN-LAST:event_btnEndNActionPerformed
 
     private void btnGoNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoNActionPerformed
         // TODO add your handling code here:
-//        try {
-//            if (Integer.parseInt(txtPosN.getText()) != curPage
-//                && Integer.parseInt(txtPosN.getText()) > 0
-//                && Integer.parseInt(txtPosN.getText()) <= page) {
-//                curPage = Integer.parseInt(txtPosN.getText());
-//                fillTable(rdoTC.isSelected());
-//            }
-//        } catch (NumberFormatException e) {
-//            JOptionPane.showMessageDialog(this, "số trang phải là số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
-//        }
+        try {
+            if (Integer.parseInt(txtPosN.getText()) != curPageN
+                    && Integer.parseInt(txtPosN.getText()) > 0
+                    && Integer.parseInt(txtPosN.getText()) <= pageN) {
+                curPageN = Integer.parseInt(txtPosN.getText());
+                fillTableNK();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
     }//GEN-LAST:event_btnGoNActionPerformed
+
+    private void btnXCTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXCTNActionPerformed
+        // TODO add your handling code here:
+        if (showN >= 0) {
+            JPanel m = new NK(lstNK.get(showN), lstNK.get(showN).getIm_stat().equals("TM") ? "E" : "V");
+            Helper.showPanel(m);
+        } else {
+            JOptionPane.showMessageDialog(this, "Mời chọn hóa đơn để xem");
+        }
+    }//GEN-LAST:event_btnXCTNActionPerformed
+
+    private void btnTXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTXActionPerformed
+        // TODO add your handling code here:
+        lstXK = exportDAO.getList(txtMHDX.getText().trim().equals("") ? null : txtMHDX.getText().trim(), jdtFromX.getDate(),
+                Date.from((jdtToX.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1)).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+        curPageX = 1;
+        fillTableXK();
+    }//GEN-LAST:event_btnTXActionPerformed
+
+    private void btnRXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRXActionPerformed
+        // TODO add your handling code here:
+        txtMHDX.setText("");
+        lstXK = exportDAO.getList();
+        curPageX = 1;
+        fillTableXK();
+    }//GEN-LAST:event_btnRXActionPerformed
+
+    private void tblXMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblXMouseClicked
+        // TODO add your handling code here:
+        rowX = tblX.getSelectedRow();
+        if (rowX >= 0) {
+            showX = (curPageX - 1) * itemPerPageX + rowX;
+        }
+    }//GEN-LAST:event_tblXMouseClicked
 
     private void btnHomeXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeXActionPerformed
         // TODO add your handling code here:
+        curPageX = 1;
+        fillTableXK();
     }//GEN-LAST:event_btnHomeXActionPerformed
 
     private void btnBackXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackXActionPerformed
         // TODO add your handling code here:
+        curPageX = curPageX > 1 ? curPageX - 1 : 1;
+        fillTableXK();
     }//GEN-LAST:event_btnBackXActionPerformed
 
     private void btnNextXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextXActionPerformed
         // TODO add your handling code here:
+        curPageX = curPageX < pageX ? curPageX + 1 : pageX;
+        fillTableXK();
     }//GEN-LAST:event_btnNextXActionPerformed
 
     private void btnEndXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndXActionPerformed
         // TODO add your handling code here:
+        curPageX = pageX;
+        fillTableXK();
     }//GEN-LAST:event_btnEndXActionPerformed
 
     private void btnGoXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoXActionPerformed
         // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPosX.getText()) != curPageX
+                    && Integer.parseInt(txtPosX.getText()) > 0
+                    && Integer.parseInt(txtPosX.getText()) <= pageX) {
+                curPageX = Integer.parseInt(txtPosX.getText());
+                fillTableNK();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
     }//GEN-LAST:event_btnGoXActionPerformed
+
+    private void btnXCTXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXCTXActionPerformed
+        // TODO add your handling code here:
+        if (showX >= 0) {
+            JPanel m = new XK(lstXK.get(showX));
+            Helper.showPanel(m);
+        } else {
+            JOptionPane.showMessageDialog(this, "Mời chọn hóa đơn để xem");
+        }
+    }//GEN-LAST:event_btnXCTXActionPerformed
+
+    private void jtpTKStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jtpTKStateChanged
+        // TODO add your handling code here:
+        if (!tabLoaded) {
+            return;
+        }
+        int sel = jtpTK.getSelectedIndex();
+        if (sel == 1) {
+            tab = 3;
+            loadTab(tab);
+        }
+    }//GEN-LAST:event_jtpTKStateChanged
+
+    private void jtpTNStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jtpTNStateChanged
+        // TODO add your handling code here:
+        if (!tabLoaded) {
+            return;
+        }
+        int sel = jtpTN.getSelectedIndex();
+        this.tab = sel == 0 ? 1 : 2;
+        loadTab(tab);
+    }//GEN-LAST:event_jtpTNStateChanged
+
+    private void btnTSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnTSPActionPerformed
+
+    private void btnRSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRSPActionPerformed
+
+    private void tblSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSPMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblSPMouseClicked
 
     private void btnHomeSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeSPActionPerformed
         // TODO add your handling code here:
@@ -845,6 +1075,10 @@ public class TK extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnGoSPActionPerformed
 
+    private void btnXCTSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXCTSPActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnXCTSPActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnBackN;
@@ -865,7 +1099,6 @@ public class TK extends javax.swing.JPanel {
     private javax.swing.JButton btnRN;
     private javax.swing.JButton btnRSP;
     private javax.swing.JButton btnRX;
-    private javax.swing.JButton btnSN;
     private javax.swing.JButton btnTN;
     private javax.swing.JButton btnTSP;
     private javax.swing.JButton btnTX;
@@ -907,8 +1140,8 @@ public class TK extends javax.swing.JPanel {
     private com.toedter.calendar.JDateChooser jdtToX;
     private javax.swing.JPanel jpnNK;
     private javax.swing.JPanel jpnXK;
-    private javax.swing.JTabbedPane jtbTN;
     private javax.swing.JTabbedPane jtpTK;
+    private javax.swing.JTabbedPane jtpTN;
     private javax.swing.JLabel lblPosN;
     private javax.swing.JLabel lblPosSP;
     private javax.swing.JLabel lblPosX;
@@ -923,4 +1156,197 @@ public class TK extends javax.swing.JPanel {
     private javax.swing.JTextField txtPosSP;
     private javax.swing.JTextField txtPosX;
     // End of variables declaration//GEN-END:variables
+
+    private void loadTab(int tab) {
+        switch (tab) {
+            case 2:
+                jtpTK.setSelectedIndex(0);
+                jtpTN.setSelectedIndex(1);
+                loadXKTab();
+                break;
+            case 1:
+                jtpTK.setSelectedIndex(0);
+                loadNKTab();
+                break;
+            default:
+                jtpTK.setSelectedIndex(1);
+                loadSPTab();
+        }
+    }
+
+    /*
+     * nhap kho
+     */
+    private ArrayList<Import> lstNK;
+    private ImportDAO importDAO;
+    private int pageN, itemPerPageN, rowN, showN;
+    public static int curPageN;
+    private DefaultTableModel nkModel;
+
+    //
+    private void loadNKTab() {
+        importDAO = new ImportDAO();
+        jdtFromN.getDateEditor().setEnabled(false);
+        jdtToN.getDateEditor().setEnabled(false);
+        jdtFromN.setDate(Date.from(LocalDate.now().minusMonths(1).atTime(LocalTime.now()).atZone(ZoneId.systemDefault()).toInstant()));
+        jdtToN.setDate(Date.from(LocalDate.now().atTime(LocalTime.now()).atZone(ZoneId.systemDefault()).toInstant()));
+        lstNK = importDAO.getList();
+        itemPerPageN = 3;
+        nkModel = (DefaultTableModel) tblN.getModel();
+        fillTableNK();
+    }
+
+    private void fillTableNK() {
+        pageN = (int) Math.ceil(lstNK.size() / (double) itemPerPageN);
+        int start = curPageN * itemPerPageN - itemPerPageN, end = itemPerPageN * curPageN - 1;
+        if (lstNK.size() - 1 < end) {
+            end = lstNK.size() - 1;
+        }
+        nkModel.setRowCount(0);
+        if (lstNK.size() > 0) {
+            for (int i = start; i <= end; i++) {
+                String tt;
+                switch (lstNK.get(i).getIm_stat()) {
+                    case "TM":
+                        tt = "Chờ hàng về";
+                        break;
+                    case "NDH":
+                        tt = "Đã kiểm hàng";
+                        break;
+                    default:
+                        tt = "Nhập kho xong";
+                }
+                nkModel.addRow(new Object[]{
+                    lstNK.get(i).getIm_id(),
+                    new SupplierDAO().select(lstNK.get(i).getSup_id()).getSup_name(),
+                    new SimpleDateFormat("MMM dd, yyyy").format(lstNK.get(i).getIm_date()),
+                    tt});
+            }
+            lblPosN.setText(String.valueOf(curPageN) + "/" + String.valueOf(pageN));
+            txtPosN.setText(String.valueOf(curPageN));
+        } else {
+            lblPosN.setText("");
+            txtPosN.setText("");
+        }
+        nkModel.fireTableDataChanged();
+        rowN = -1;
+        showN = -1;
+    }
+
+    /*
+     * xuat kho
+     */
+    private ArrayList<Export> lstXK;
+    private ExportDAO exportDAO;
+    private int pageX, itemPerPageX, rowX, showX;
+    public static int curPageX;
+    private DefaultTableModel xkModel;
+
+    //
+    private void loadXKTab() {
+        exportDAO = new ExportDAO();
+        jdtFromX.getDateEditor().setEnabled(false);
+        jdtToX.getDateEditor().setEnabled(false);
+        jdtFromX.setDate(Date.from(LocalDate.now().minusMonths(1).atTime(LocalTime.now()).atZone(ZoneId.systemDefault()).toInstant()));
+        jdtToX.setDate(Date.from(LocalDate.now().atTime(LocalTime.now()).atZone(ZoneId.systemDefault()).toInstant()));
+        lstXK = exportDAO.getList();
+        itemPerPageX = 3;
+        xkModel = (DefaultTableModel) tblX.getModel();
+        fillTableXK();
+    }
+
+    private void fillTableXK() {
+        pageX = (int) Math.ceil(lstXK.size() / (double) itemPerPageX);
+        int start = itemPerPageX * curPageX - itemPerPageX, end = itemPerPageX * curPageX - 1;
+        if (lstXK.size() - 1 < end) {
+            end = lstXK.size() - 1;
+        }
+        xkModel.setRowCount(0);
+        if (lstXK.size() > 0) {
+            for (int i = start; i <= end; i++) {
+                xkModel.addRow(new Object[]{
+                    lstXK.get(i).getEx_id(),
+                    new SimpleDateFormat("MMM dd, yyyy - hh:mm a").format(lstXK.get(i).getEx_date())});
+            }
+            lblPosX.setText(String.valueOf(curPageX) + "/" + String.valueOf(pageX));
+            txtPosX.setText(String.valueOf(curPageX));
+        } else {
+            lblPosX.setText("");
+            txtPosX.setText("");
+        }
+        xkModel.fireTableDataChanged();
+    }
+
+    /*
+     * san pham
+     */
+    private ArrayList<Producer> lstSPTH;
+    private ArrayList<PhoneName> lstSPTM;
+    private ArrayList<Memory> lstSPBN;
+    private ArrayList<Type> lstSP;
+    private TypeDAO typeDAO;
+    private ProductDAO productDAO;
+    private ProducerDAO producerDAO;
+    private PhoneNameDAO phoneNameDAO;
+    private MemoryDAO memoryDAO;
+    private int pageSP, itemPerPageSP, rowSP, showSP, curPageSP;
+    private DefaultTableModel spModel;
+    private DefaultComboBoxModel thModel, tmModel, ramModel, romModel;
+
+    //
+    private void loadSPTab() {
+        productDAO = new ProductDAO();
+        typeDAO = new TypeDAO();
+        lstSP = typeDAO.selectAll(false);
+        itemPerPageSP = 3;
+        spModel = (DefaultTableModel) tblSP.getModel();
+        loadTH();
+        loadBN();
+
+    }
+
+    private void loadTH() {
+        producerDAO = new ProducerDAO();
+        lstSPTH = producerDAO.selectAll();
+        thModel = new DefaultComboBoxModel();
+        cboTH.setModel(thModel);
+        thModel.removeAllElements();
+        thModel.addElement("-");
+        for (Producer producer : lstSPTH) {
+            thModel.addElement(producer);
+        }
+        loadTM();
+    }
+
+    private void loadTM() {
+        int sel = cboTM.getSelectedIndex();
+        phoneNameDAO = new PhoneNameDAO();
+        tmModel = new DefaultComboBoxModel();
+        cboTM.setModel(tmModel);
+        tmModel.removeAllElements();
+        tmModel.addElement("-");
+        if (sel > 0) {
+            lstSPTM = phoneNameDAO.selectAllByColumn(lstSPTH.get(sel - 1).getId());
+            for (PhoneName phoneName : lstSPTM) {
+                tmModel.addElement(phoneName);
+            }
+        }
+    }
+
+    private void loadBN() {
+        memoryDAO = new MemoryDAO();
+        lstSPBN = memoryDAO.selectAll();
+        ramModel = new DefaultComboBoxModel();
+        romModel = new DefaultComboBoxModel();
+        cboRam.setModel(ramModel);
+        cboRom.setModel(romModel);
+        ramModel.removeAllElements();
+        romModel.removeAllElements();
+        romModel.addElement("-");
+        ramModel.addElement("-");
+        for (Memory memory : lstSPBN) {
+            ramModel.addElement(memory);
+            romModel.addElement(memory);
+        }
+    }
 }

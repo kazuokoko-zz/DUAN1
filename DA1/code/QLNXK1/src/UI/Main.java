@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 import static Helper.Helper.showPanel;
 
@@ -55,6 +54,8 @@ public class Main extends javax.swing.JFrame {
         t1.start();
         settime();
         setLocationRelativeTo(null);
+        TK.curPageN = 1;
+        TK.curPageX = 1;
     }
 
     /**
@@ -89,6 +90,7 @@ public class Main extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         buttonGroup1.add(btnMain);
+        btnMain.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Home1.png"))); // NOI18N
         btnMain.setText("CHƯƠNG TRÌNH");
         btnMain.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -97,6 +99,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnNK);
+        btnNK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Right.png"))); // NOI18N
         btnNK.setText("NHẬP KHO");
         btnNK.setEnabled(false);
         btnNK.addItemListener(new java.awt.event.ItemListener() {
@@ -106,6 +109,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnXK);
+        btnXK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Left.png"))); // NOI18N
         btnXK.setText("XUẤT KHO");
         btnXK.setEnabled(false);
         btnXK.addItemListener(new java.awt.event.ItemListener() {
@@ -115,6 +119,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnNCC);
+        btnNCC.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Company.png"))); // NOI18N
         btnNCC.setText("NHÀ CUNG CẤP");
         btnNCC.setEnabled(false);
         btnNCC.addItemListener(new java.awt.event.ItemListener() {
@@ -124,6 +129,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnMSP);
+        btnMSP.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/List.png"))); // NOI18N
         btnMSP.setText("MÃ SẢN PHẨM");
         btnMSP.setEnabled(false);
         btnMSP.addItemListener(new java.awt.event.ItemListener() {
@@ -133,6 +139,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnQLK);
+        btnQLK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Box.png"))); // NOI18N
         btnQLK.setText("QUẢN LÝ KỆ");
         btnQLK.setEnabled(false);
         btnQLK.addItemListener(new java.awt.event.ItemListener() {
@@ -142,6 +149,7 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnTK);
+        btnTK.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Search.png"))); // NOI18N
         btnTK.setText("TÌM KIẾM");
         btnTK.setEnabled(false);
         btnTK.addItemListener(new java.awt.event.ItemListener() {
@@ -151,8 +159,13 @@ public class Main extends javax.swing.JFrame {
         });
 
         buttonGroup1.add(btnTDTT);
-        btnTDTT.setText("THAY ĐỔI TRẠNG THÁI");
+        btnTDTT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Notes.png"))); // NOI18N
         btnTDTT.setEnabled(false);
+        btnTDTT.setLabel("TRẠNG THÁI");
+        btnTDTT.setMargin(new java.awt.Insets(2, 0, 2, 0));
+        btnTDTT.setMaximumSize(new java.awt.Dimension(166, 34));
+        btnTDTT.setMinimumSize(new java.awt.Dimension(166, 26));
+        btnTDTT.setPreferredSize(new java.awt.Dimension(166, 34));
         btnTDTT.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
                 btnTDTTItemStateChanged(evt);
@@ -173,7 +186,7 @@ public class Main extends javax.swing.JFrame {
                     .addComponent(btnMSP, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnQLK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnTK, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnTDTT, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE))
+                    .addComponent(btnTDTT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -194,8 +207,8 @@ public class Main extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnTK)
                 .addGap(18, 18, 18)
-                .addComponent(btnTDTT)
-                .addContainerGap(370, Short.MAX_VALUE))
+                .addComponent(btnTDTT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(309, Short.MAX_VALUE))
         );
 
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
@@ -249,10 +262,10 @@ public class Main extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(rootP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(rootP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(1, 1, 1)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -432,5 +445,4 @@ public class Main extends javax.swing.JFrame {
 //                        .addComponent(panel)
 //        );
 //    }
-
 }

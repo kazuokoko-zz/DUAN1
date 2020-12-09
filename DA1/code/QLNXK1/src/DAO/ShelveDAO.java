@@ -10,6 +10,7 @@ import Model.Area;
 import Model.Shelve;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
@@ -160,6 +161,22 @@ public class ShelveDAO implements DAO_Interface<Shelve> {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public ArrayList<Shelve> getNotFullShelve() {
+        ArrayList<Shelve> l = new ArrayList<>();
+        String sql = "select * from shelves\n"
+                + "where shel_stat>=0 and shel_stat<100";
+
+        try {
+            Statement stm = Helper.Helper.connection.createStatement();
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                l.add(new Shelve(rs.getNString("shel_id"), rs.getInt("shel_stat")));
+            }
+        } catch (Exception e) {
+        }
+        return l;
     }
 
 }

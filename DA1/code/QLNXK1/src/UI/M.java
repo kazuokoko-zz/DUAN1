@@ -22,13 +22,13 @@ public class M extends javax.swing.JPanel {
     public M() {
         initComponents();
         lblUser.setText(Main.logged ? Main.account.getUser() : "");
-        lblSoLuong.setText(new ProductDAO().getAllNumOfPhoneInStorage() == -1 ?
-                "Lỗi đọc" : String.valueOf(new ProductDAO().getAllNumOfPhoneInStorage()));
+        lblSoLuong.setText(new ProductDAO().getAllNumOfPhoneInStorage() == -1
+                ? "Lỗi đọc" : String.valueOf(new ProductDAO().getAllNumOfPhoneInStorage()));
         Date NG = new ImportDAO().getNearestImportDate();
-        lblNhapgan.setText(NG == null ? "Không có" : (new SimpleDateFormat("MMM dd,yyyy - hh:mm:ss")).format(NG));
+        lblNhapgan.setText(NG == null ? "Không có" : (new SimpleDateFormat("MMM dd,yyyy")).format(NG));
 
         Date XG = new ExportDAO().getNearestExportDate();
-        lblXuatgan.setText(XG == null ? "Không có" : (new SimpleDateFormat("MMM dd,yyyy - hh:mm:ss")).format(XG));
+        lblXuatgan.setText(XG == null ? "Không có" : (new SimpleDateFormat("MMM dd,yyyy")).format(XG));
         String id = new TypeDAO().getRemainType();
         lblTonkho.setText(id == null ? "Không có" : new TypeDAO().select(new Type(id, "", "")).getType_name());
         id = new TypeDAO().getNearestType();
