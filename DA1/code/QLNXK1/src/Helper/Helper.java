@@ -79,6 +79,16 @@ public class Helper {
         return pattern.matcher(temp).replaceAll("").replaceAll("Đ", "D").replace("đ", "d");
     }
 
+    public static String removeMulSpace(String f) {
+        int lenBefor, lenAfter;
+        do {
+            lenBefor = f.length();
+            f = f.replaceAll("  ", " ");
+            lenAfter = f.length();
+        } while (lenBefor != lenAfter);
+        return f;
+    }
+
     public static void showPanel(JPanel panel) {
         Main.rootP.removeAll();
         javax.swing.GroupLayout rootPLayout = new javax.swing.GroupLayout(Main.rootP);

@@ -800,7 +800,7 @@
                           </Group>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtMHDSP" min="-2" pref="850" max="-2" attributes="0"/>
+                              <Component id="txtTSP" min="-2" pref="850" max="-2" attributes="0"/>
                               <Group type="102" attributes="0">
                                   <Component id="cboTM" min="-2" pref="300" max="-2" attributes="0"/>
                                   <EmptySpace max="32767" attributes="0"/>
@@ -831,7 +831,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" max="-2" attributes="0">
                               <Component id="btnTSP" alignment="1" max="32767" attributes="0"/>
-                              <Component id="txtMHDSP" alignment="1" max="32767" attributes="0"/>
+                              <Component id="txtTSP" alignment="1" max="32767" attributes="0"/>
                               <Component id="jLabel7" alignment="1" min="-2" pref="26" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
@@ -858,10 +858,10 @@
                 <Component class="javax.swing.JLabel" name="jLabel7">
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="11"/>
-                    <Property name="text" type="java.lang.String" value="M&#xe3; h&#xf3;a &#x111;&#x1a1;n:"/>
+                    <Property name="text" type="java.lang.String" value="T&#xea;n &#x111;i&#x1ec7;n tho&#x1ea1;i:"/>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="txtMHDSP">
+                <Component class="javax.swing.JTextField" name="txtTSP">
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel9">
                   <Properties>
@@ -902,6 +902,9 @@
                       </StringArray>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboTHItemStateChanged"/>
+                  </Events>
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
                   </AuxValues>

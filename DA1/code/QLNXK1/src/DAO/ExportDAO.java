@@ -98,6 +98,25 @@ public class ExportDAO implements DAO_Interface<Export> {
         }
     }
 
+    public Date getNearestExportDate(String type_id) {
+        String sql = "select MAX(exports.ex_date) as d \n"
+                + "from exports inner join export_detail on exports.ex_id = export_detail.ex_id\n"
+                + "inner join products on export_detail.serial = products.serial\n"
+                + "where products.type_id like ?";
+        Date date = null;
+        try {
+            PreparedStatement stm = Helper.connection.prepareStatement(sql);
+            stm.setNString(1, type_id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                date = rs.getDate("d") == null ? null : Date.from((rs.getTimestamp("d")).toLocalDateTime().atZone(ZoneId.systemDefault()).toInstant());
+            }
+        } catch (SQLException throwables) {
+            date = null;
+        }
+        return date;
+    }
+
     public int getNextExport() {
         String sql = "select iif(max(Right(ex_id,18)) is null , 1 ,cast(max(Right(ex_id,18))as int) +1)  as next\n"
                 + "from exports \n";

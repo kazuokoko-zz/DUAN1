@@ -19,15 +19,18 @@ import Model.Import;
 import Model.Memory;
 import Model.PhoneName;
 import Model.Producer;
-import Model.Product;
 import Model.Type;
+import java.awt.Frame;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -116,7 +119,7 @@ public class TK extends javax.swing.JPanel {
         jPanel1 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
-        txtMHDSP = new javax.swing.JTextField();
+        txtTSP = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
         btnTSP = new javax.swing.JButton();
@@ -614,7 +617,7 @@ public class TK extends javax.swing.JPanel {
         jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder("Tìm kiếm"));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jLabel7.setText("Mã hóa đơn:");
+        jLabel7.setText("Tên điện thoại:");
 
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Thương hiệu:");
@@ -637,6 +640,11 @@ public class TK extends javax.swing.JPanel {
         });
 
         cboTH.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTH.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboTHItemStateChanged(evt);
+            }
+        });
 
         cboRam.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -662,7 +670,7 @@ public class TK extends javax.swing.JPanel {
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(txtMHDSP, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtTSP, javax.swing.GroupLayout.PREFERRED_SIZE, 850, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(cboTM, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -687,7 +695,7 @@ public class TK extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(btnTSP, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtMHDSP, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtTSP, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(13, 13, 13)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -870,13 +878,7 @@ public class TK extends javax.swing.JPanel {
 
     private void btnTNActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTNActionPerformed
         // TODO add your handling code here:
-        int lenBefor, lenAfter;
-        String f = txtNCCN.getText().trim();
-        do {
-            lenBefor = f.length();
-            f = f.replaceAll("  ", " ");
-            lenAfter = f.length();
-        } while (lenBefor != lenAfter);
+        String f = Helper.removeMulSpace(txtNCCN.getText().trim());
         lstNK = importDAO.getList(txtMHDN.getText().trim().equals("") ? null : txtMHDN.getText().trim(), f, jdtFromN.getDate(),
                 Date.from((jdtToN.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().plusDays(1)).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
         curPageN = 1;
@@ -1004,7 +1006,7 @@ public class TK extends javax.swing.JPanel {
                     && Integer.parseInt(txtPosX.getText()) > 0
                     && Integer.parseInt(txtPosX.getText()) <= pageX) {
                 curPageX = Integer.parseInt(txtPosX.getText());
-                fillTableNK();
+                fillTableXK();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
@@ -1044,40 +1046,98 @@ public class TK extends javax.swing.JPanel {
     }//GEN-LAST:event_jtpTNStateChanged
 
     private void btnTSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTSPActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here: 
+        ArrayList<String> name;
+        if (txtTSP.getText().trim().equals("")) {
+            name = null;
+        } else {
+            name = new ArrayList<>();
+            Collections.addAll(name, Helper.removeMulSpace(txtTSP.getText().trim()).split(" "));
+        }
+        Integer ram = cboRam.getSelectedIndex() == 0 ? null : lstSPBN.get(cboRam.getSelectedIndex() - 1).getAmount();
+        Integer rom = cboRom.getSelectedIndex() == 0 ? null : lstSPBN.get(cboRom.getSelectedIndex() - 1).getAmount();
+        String producer = cboTH.getSelectedIndex() == 0 ? null : lstSPTH.get(cboTH.getSelectedIndex() - 1).getId();;
+        Integer phonename = cboTM.getSelectedIndex() == 0 ? null : lstSPTM.get(cboTM.getSelectedIndex() - 1).getNum_order();
+        lstSP = typeDAO.selectAll(name, ram, rom, producer, phonename);
+        curPageSP = 1;
+        fillTableSP();
     }//GEN-LAST:event_btnTSPActionPerformed
 
     private void btnRSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRSPActionPerformed
         // TODO add your handling code here:
+        txtTSP.setText("");
+        cboTH.setSelectedIndex(0);
+        cboRam.setSelectedIndex(0);
+        cboRom.setSelectedIndex(0);
+        lstSP = typeDAO.selectAll(null, null, null, null, null);
+        curPageSP = 1;
+        fillTableSP();
     }//GEN-LAST:event_btnRSPActionPerformed
 
     private void tblSPMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblSPMouseClicked
         // TODO add your handling code here:
+        rowSP = tblSP.getSelectedRow();
+        if (rowSP >= 0) {
+            showSP = (curPageSP - 1) * itemPerPageSP + rowSP;
+        }
     }//GEN-LAST:event_tblSPMouseClicked
 
     private void btnHomeSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeSPActionPerformed
         // TODO add your handling code here:
+        curPageSP = 1;
+        fillTableSP();
     }//GEN-LAST:event_btnHomeSPActionPerformed
 
     private void btnBackSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackSPActionPerformed
         // TODO add your handling code here:
+        curPageSP = curPageSP > 1 ? curPageSP - 1 : 1;
+        fillTableSP();
     }//GEN-LAST:event_btnBackSPActionPerformed
 
     private void btnNextSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextSPActionPerformed
         // TODO add your handling code here:
+        curPageSP = curPageSP < pageSP ? curPageSP + 1 : pageSP;
+        fillTableSP();
     }//GEN-LAST:event_btnNextSPActionPerformed
 
     private void btnEndSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndSPActionPerformed
         // TODO add your handling code here:
+        curPageSP = pageSP;
+        fillTableSP();
     }//GEN-LAST:event_btnEndSPActionPerformed
 
     private void btnGoSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoSPActionPerformed
         // TODO add your handling code here:
+        try {
+            if (Integer.parseInt(txtPosSP.getText()) != curPageSP
+                    && Integer.parseInt(txtPosSP.getText()) > 0
+                    && Integer.parseInt(txtPosSP.getText()) <= pageSP) {
+                curPageX = Integer.parseInt(txtPosSP.getText());
+                fillTableSP();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
     }//GEN-LAST:event_btnGoSPActionPerformed
 
     private void btnXCTSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXCTSPActionPerformed
         // TODO add your handling code here:
+        if (showSP >= 0) {
+            JDialog ctsp;
+            ctsp = new CTSP((JFrame) this.getTopLevelAncestor(), true, lstSP.get(showSP));
+            ctsp.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "Mời chọn loại máy để xem");
+        }
     }//GEN-LAST:event_btnXCTSPActionPerformed
+
+    private void cboTHItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboTHItemStateChanged
+        // TODO add your handling code here:
+        if (!thLoaded) {
+            return;
+        }
+        loadTM();
+    }//GEN-LAST:event_cboTHItemStateChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1149,12 +1209,12 @@ public class TK extends javax.swing.JPanel {
     private javax.swing.JTable tblSP;
     private javax.swing.JTable tblX;
     private javax.swing.JTextField txtMHDN;
-    private javax.swing.JTextField txtMHDSP;
     private javax.swing.JTextField txtMHDX;
     private javax.swing.JTextField txtNCCN;
     private javax.swing.JTextField txtPosN;
     private javax.swing.JTextField txtPosSP;
     private javax.swing.JTextField txtPosX;
+    private javax.swing.JTextField txtTSP;
     // End of variables declaration//GEN-END:variables
 
     private void loadTab(int tab) {
@@ -1289,20 +1349,26 @@ public class TK extends javax.swing.JPanel {
     private ProducerDAO producerDAO;
     private PhoneNameDAO phoneNameDAO;
     private MemoryDAO memoryDAO;
+    private ExportDAO exportDAO1;
     private int pageSP, itemPerPageSP, rowSP, showSP, curPageSP;
     private DefaultTableModel spModel;
     private DefaultComboBoxModel thModel, tmModel, ramModel, romModel;
+    private boolean thLoaded;
 
     //
     private void loadSPTab() {
         productDAO = new ProductDAO();
         typeDAO = new TypeDAO();
-        lstSP = typeDAO.selectAll(false);
+        exportDAO1 = new ExportDAO();
+        lstSP = typeDAO.selectAll(null, null, null, null, null);
         itemPerPageSP = 3;
+        curPageSP = 1;
         spModel = (DefaultTableModel) tblSP.getModel();
+        thLoaded = false;
         loadTH();
         loadBN();
-
+        fillTableSP();
+        thLoaded = true;
     }
 
     private void loadTH() {
@@ -1319,7 +1385,7 @@ public class TK extends javax.swing.JPanel {
     }
 
     private void loadTM() {
-        int sel = cboTM.getSelectedIndex();
+        int sel = cboTH.getSelectedIndex();
         phoneNameDAO = new PhoneNameDAO();
         tmModel = new DefaultComboBoxModel();
         cboTM.setModel(tmModel);
@@ -1348,5 +1414,34 @@ public class TK extends javax.swing.JPanel {
             ramModel.addElement(memory);
             romModel.addElement(memory);
         }
+    }
+
+    private void fillTableSP() {
+        pageSP = (int) Math.ceil(lstSP.size() / (double) itemPerPageSP);
+        int start = curPageSP * itemPerPageSP - itemPerPageSP, end = curPageSP * itemPerPageSP - 1;
+        if (lstSP.size() - 1 < end) {
+            end = lstSP.size() - 1;
+        }
+        spModel.setRowCount(0);
+        if (lstSP.size() > 0) {
+            for (int i = start; i <= end; i++) {
+                Date x = exportDAO1.getNearestExportDate(lstSP.get(i).getType_id());
+                String date = x == null ? "" : new SimpleDateFormat("MMM dd, yyyy").format(x);
+                int num = productDAO.getNumOfPhoneInStorage(lstSP.get(i).getType_id());
+                spModel.addRow(new Object[]{
+                    lstSP.get(i).getType_id(),
+                    lstSP.get(i).getType_name(),
+                    (num == -1 ? "Lỗi đọc dữ liệu" : num),
+                    date});
+            }
+            lblPosSP.setText(String.valueOf(curPageSP) + "/" + String.valueOf(pageSP));
+            txtPosSP.setText(String.valueOf(curPageSP));
+        } else {
+            lblPosSP.setText("");
+            txtPosSP.setText("");
+        }
+        spModel.fireTableDataChanged();
+        rowSP = -1;
+        showSP = -1;
     }
 }

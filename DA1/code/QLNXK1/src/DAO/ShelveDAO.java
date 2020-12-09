@@ -179,4 +179,37 @@ public class ShelveDAO implements DAO_Interface<Shelve> {
         return l;
     }
 
+    public ArrayList<Shelve> getActiveShelve() {
+        ArrayList<Shelve> l = new ArrayList<>();
+        String sql = "select * from shelves\n"
+                + "where shel_stat>=0 and shel_stat<=100";
+
+        try {
+            Statement stm = Helper.Helper.connection.createStatement();
+            ResultSet rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                l.add(new Shelve(rs.getNString("shel_id"), rs.getInt("shel_stat")));
+            }
+        } catch (Exception e) {
+        }
+        return l;
+    }
+
+    public ArrayList<Shelve> getProductShelves(String type_id) {
+        ArrayList<Shelve> l = new ArrayList<>();
+        String sql = "select distinct shelves.shel_id,shelves.shel_stat\n"
+                + "from shelves inner join products on shelves.shel_id = products.shel_id\n"
+                + "where products.type_id like ? and PRODUCTS.stat like 'sansang'";
+
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, type_id);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                l.add(new Shelve(rs.getNString("shel_id"), rs.getInt("shel_stat")));
+            }
+        } catch (Exception e) {
+        }
+        return l;
+    }
 }

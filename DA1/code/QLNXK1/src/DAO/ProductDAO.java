@@ -90,6 +90,28 @@ public class ProductDAO implements DAO_Interface<Product> {
         }
     }
 
+    public void updateAllFail(ArrayList<Product> lst) {
+        for (Product product : lst) {
+            product.setStat("hong");
+            update(product);
+        }
+    }
+
+    public void updateAllShel(ArrayList<Product> lst, String shel_id) {
+        for (Product product : lst) {
+            String sql = "update  products\n"
+                    + "set shel_id = ?\n"
+                    + "where serial like ?";
+            try {
+                PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+                stm.setNString(1, shel_id);
+                stm.setNString(2, product.getSerial());
+                stm.executeUpdate();
+            } catch (Exception e) {
+            }
+        }
+    }
+
     @Override
     public Product selectByColumn(Object... param) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -124,7 +146,7 @@ public class ProductDAO implements DAO_Interface<Product> {
 
     public int getNumOfPhoneInStorage(String type_id) {
         String sql = "select count(*) as sl from products\n"
-                + "where stat like 'sansang' and id like ?";
+                + "where stat like 'sansang' and type_id like ?\n";
         int i;
         try {
             PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
@@ -188,6 +210,34 @@ public class ProductDAO implements DAO_Interface<Product> {
             i = -1;
         }
         return i;
+    }
+
+    public ArrayList<Product> getlist(boolean all) {
+        return getlist(all, null);
+    }
+
+    public ArrayList<Product> getlist(boolean all, String serial) {
+        ArrayList<Product> l = new ArrayList<>();
+        String sql = "select * from products\n"
+                + "where serial like ? and not (stat like 'vuanhap')"
+                + (all ? "" : "and not (stat like 'daban')\n")
+                + "order by stat desc";
+        String s = serial == null ? "%" : "%" + serial + "%";
+        try {
+            PreparedStatement stm = Helper.Helper.connection.prepareStatement(sql);
+            stm.setNString(1, s);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                l.add(new Product(rs.getInt("id"),
+                        rs.getNString("im_id"),
+                        rs.getNString("type_id"),
+                        rs.getNString("serial"),
+                        rs.getNString("shel_id"),
+                        rs.getNString("stat")));
+            }
+        } catch (Exception e) {
+        }
+        return l;
     }
 
 }

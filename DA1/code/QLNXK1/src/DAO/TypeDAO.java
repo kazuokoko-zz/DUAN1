@@ -162,6 +162,84 @@ public class TypeDAO implements DAO_Interface<Type> {
         return l;
     }
 
+    public ArrayList<Type> selectAll(ArrayList<String> name, Integer ram, Integer rom, String producer, Integer phonename) {
+        ArrayList<Type> l = new ArrayList();
+        String sql = "select distinct types.type_id as type_id,types.type_name as type_name,types.type_stat as type_stat\n"
+                + "from types ,producers,phonenames, memories \n"
+                + "where \n"
+                + "((left(types.type_id,2) = producers.id \n"
+                + "and left(types.type_id,2) = phonenames.id_prd \n"
+                + "and cast(substring(types.type_id,3,3)as int) = phonenames.num_order and\n"
+                + "cast(substring(types.type_id,7,5) as int) = memories.amount \n"
+                + "or cast(substring(types.type_id,13,2) as int) = memories.amount))\n"
+                + "and\n"
+                + "type_stat like 'KD'\n";
+        int len = name == null ? 0 : name.size(), j = 1;
+        if (len > 0) {
+            if (len == 1) {
+                sql = sql.concat("and dbo.f_RemoveAccent(types.type_name) like dbo.f_RemoveAccent(?)\n");
+            } else {
+                sql = sql.concat("and (dbo.f_RemoveAccent(types.type_name) like dbo.f_RemoveAccent(?)\n");
+                for (int i = 2; i < len; i++) {
+                    sql = sql.concat("or dbo.f_RemoveAccent(types.type_name) like dbo.f_RemoveAccent(?)\n");
+                }
+                sql = sql.concat("or dbo.f_RemoveAccent(types.type_name) like dbo.f_RemoveAccent(?))\n");
+            }
+        }
+        if (rom != null || ram != null || producer != null || phonename != null) {
+            sql = sql.concat("and (");
+            boolean added = false;
+            if (rom != null) {
+                sql = sql.concat("cast(substring(types.type_id,7,5) as int) = ? \n");
+                added = true;
+            }
+            if (ram != null) {
+                sql = sql.concat(added ? "or " : "").concat("cast(substring(types.type_id,13,2) as int) = ?\n");
+                added = true;
+            }
+            if (producer != null) {
+                sql = sql.concat(added ? "or " : "").concat("SUBSTRING(types.type_id,1,2) like ?\n");
+                added = true;
+            }
+            if (phonename != null) {
+                sql = sql.concat(added ? "or " : "").concat("or cast(substring(types.type_id,3,3)as int) = ?\n");
+            }
+            sql = sql.concat(")\n");
+        }
+        sql = sql.concat("order by type_name");
+        try {
+            PreparedStatement stm = Helper.connection.prepareStatement(sql);
+            if (len > 0) {
+                for (int i = 0; i < len; i++) {
+                    stm.setNString(j + i, "%" + name.get(i) + "%");
+                }
+            }
+            if (rom != null) {
+                stm.setInt(j, (int) rom);
+                j++;
+            }
+            if (ram != null) {
+                stm.setInt(j, (int) ram);
+                j++;
+            }
+            if (producer != null) {
+                stm.setNString(j, producer);
+                j++;
+            }
+            if (phonename != null) {
+                stm.setInt(j, (int) phonename);
+                j++;
+            }
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                l.add(new Type(rs.getNString("type_id"), rs.getNString("type_name"), rs.getNString("type_stat")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return l;
+    }
+
     public String getRemainType() {
         String sql = "select top 1 types.type_id as type_id, Min(iif(ex_date is null,CAST('1900-01-01' as date),ex_date)) as d\n"
                 + "from types left outer join products on types.type_id = products.type_id\n"

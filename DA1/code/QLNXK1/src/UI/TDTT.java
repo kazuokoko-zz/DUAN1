@@ -5,17 +5,86 @@
  */
 package UI;
 
+import DAO.ProductDAO;
+import DAO.ShelveDAO;
+import DAO.TypeDAO;
+import Helper.Helper;
+import Model.DTT;
+import Model.Product;
+import Model.Shelve;
+import java.awt.Component;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import javax.swing.AbstractButton;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JCheckBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
 /**
  *
  * @author ma-user
  */
 public class TDTT extends javax.swing.JPanel {
 
+    private int page, curPage, itemPerPage, start, end, row, show;
+    private ArrayList<Product> lstSP, lstC;
+    private ArrayList<Shelve> lstK;
+    private DefaultTableModel model;
+    private DefaultComboBoxModel vtModel;
+    private ProductDAO productDAO;
+    private ShelveDAO shelveDAO;
+
     /**
      * Creates new form M
      */
     public TDTT() {
         initComponents();
+        JTableHeader tblHeader = tblM.getTableHeader();
+        TableColumn tc = tblM.getColumnModel().getColumn(0);
+        tc.setCellEditor(tblM.getDefaultEditor(Boolean.class));
+        tc.setCellRenderer(tblM.getDefaultRenderer(Boolean.class));
+        tc.setHeaderRenderer(new CheckBoxHeader(new MyItemListener()));
+        tc.setMinWidth(20);
+        tc.setMaxWidth(20);
+        tc.setPreferredWidth(20);
+        DefaultTableCellRenderer dtcr = ((DefaultTableCellRenderer) tblHeader.getDefaultRenderer());
+        dtcr.setHorizontalAlignment(SwingConstants.CENTER);
+        tblHeader.getColumnModel().getColumn(1).setHeaderRenderer(dtcr);
+        tblHeader.getColumnModel().getColumn(2).setHeaderRenderer(dtcr);
+        DefaultTableCellRenderer dtcrc = new DefaultTableCellRenderer();
+        dtcrc.setHorizontalAlignment(SwingConstants.CENTER);
+        tblM.getColumnModel().getColumn(1).setCellRenderer(dtcrc);
+        load();
+    }
+
+    class MyItemListener implements ItemListener {
+
+        public void itemStateChanged(ItemEvent e) {
+            Object source = e.getSource();
+            if (source instanceof AbstractButton == false) {
+                return;
+            }
+            boolean checked = e.getStateChange() == ItemEvent.SELECTED;
+            for (int x = 0, y = tblM.getRowCount(); x < y; x++) {
+                tblM.setValueAt(new Boolean(checked), x, 0);
+            }
+        }
     }
 
     /**
@@ -27,16 +96,16 @@ public class TDTT extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel6 = new javax.swing.JPanel();
         jLabel7 = new javax.swing.JLabel();
         txtTM = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        btnLuu = new javax.swing.JButton();
-        cboTT = new javax.swing.JComboBox<>();
-        cboK = new javax.swing.JComboBox<>();
         jLabel8 = new javax.swing.JLabel();
         txtSeri = new javax.swing.JTextField();
-        chkDVT = new javax.swing.JCheckBox();
+        jLabel11 = new javax.swing.JLabel();
+        txtTT = new javax.swing.JTextField();
+        txtK = new javax.swing.JTextField();
         jPanel7 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         tblM = new javax.swing.JTable();
@@ -60,19 +129,22 @@ public class TDTT extends javax.swing.JPanel {
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel7.setText("Tên máy");
 
+        txtTM.setEditable(false);
+
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Trạng thái:");
-
-        btnLuu.setText("Lưu");
-
-        cboTT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        cboK.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel8.setText("Seri");
 
-        chkDVT.setText("Đổi vị trí");
+        txtSeri.setEditable(false);
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel11.setText("Vị trí:");
+
+        txtTT.setEditable(false);
+
+        txtK.setEditable(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -81,25 +153,16 @@ public class TDTT extends javax.swing.JPanel {
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtTM))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(txtSeri))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel6Layout.createSequentialGroup()
-                                .addComponent(chkDVT)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(cboK, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(cboTT, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 18, 18)
-                        .addComponent(btnLuu, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTM)
+                    .addComponent(txtSeri)
+                    .addComponent(txtTT)
+                    .addComponent(txtK))
                 .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
@@ -110,44 +173,55 @@ public class TDTT extends javax.swing.JPanel {
                     .addComponent(txtTM, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE)
                     .addComponent(txtSeri))
+                .addGap(10, 10, 10)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtTT)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addGap(11, 11, 11)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboTT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(chkDVT)
-                            .addComponent(cboK, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 3, Short.MAX_VALUE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnLuu, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(1, 1, 1)
+                        .addComponent(txtK)))
+                .addContainerGap())
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder("Danh sách máy"));
 
         tblM.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
             },
             new String [] {
-                "Seri", "Trạng thái"
+                "", "Seri", "Trạng thái"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                true, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblM.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblMMouseClicked(evt);
             }
         });
         jScrollPane3.setViewportView(tblM);
@@ -198,16 +272,35 @@ public class TDTT extends javax.swing.JPanel {
             }
         });
 
-        btnXCTSP.setText("Xem chi tiết");
+        btnXCTSP.setText("Thay đổi trạng thái");
+        btnXCTSP.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnXCTSPActionPerformed(evt);
+            }
+        });
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
         jLabel10.setText("Seri");
 
+        txtSeriT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSeriTKeyReleased(evt);
+            }
+        });
+
         btnTim.setIcon(new javax.swing.ImageIcon(getClass().getResource("/LIB/ICON/Search.png"))); // NOI18N
         btnTim.setText("Tìm");
+        btnTim.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTimActionPerformed(evt);
+            }
+        });
 
+        buttonGroup1.add(rdoCB);
+        rdoCB.setSelected(true);
         rdoCB.setText("Chỉ hiện máy chưa bán");
 
+        buttonGroup1.add(rdoTC);
         rdoTC.setText("Hiện tất cả");
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -234,8 +327,8 @@ public class TDTT extends javax.swing.JPanel {
                         .addComponent(txtPosSP, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnGoSP)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 406, Short.MAX_VALUE)
-                        .addComponent(btnXCTSP, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 379, Short.MAX_VALUE)
+                        .addComponent(btnXCTSP))
                     .addGroup(jPanel7Layout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -304,23 +397,68 @@ public class TDTT extends javax.swing.JPanel {
 
     private void btnHomeSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeSPActionPerformed
         // TODO add your handling code here:
+        curPage = 1;
+        fillTable();
     }//GEN-LAST:event_btnHomeSPActionPerformed
 
     private void btnBackSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackSPActionPerformed
         // TODO add your handling code here:
+        curPage = curPage > 1 ? curPage - 1 : 1;
+        fillTable();
     }//GEN-LAST:event_btnBackSPActionPerformed
 
     private void btnNextSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNextSPActionPerformed
         // TODO add your handling code here:
+        curPage = curPage < page ? curPage + 1 : page;
+        fillTable();
     }//GEN-LAST:event_btnNextSPActionPerformed
 
     private void btnEndSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEndSPActionPerformed
         // TODO add your handling code here:
+        curPage = page;
+        fillTable();
     }//GEN-LAST:event_btnEndSPActionPerformed
 
     private void btnGoSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoSPActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:  
+        try {
+            if (Integer.parseInt(txtPosSP.getText()) != curPage
+                    && Integer.parseInt(txtPosSP.getText()) > 0
+                    && Integer.parseInt(txtPosSP.getText()) <= page) {
+                curPage = Integer.parseInt(txtPosSP.getText());
+                fillTable();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "số trang phải lả số nguyên lớn hơn 0 và nhỏ hơn tổng tất cả các trang");
+        }
     }//GEN-LAST:event_btnGoSPActionPerformed
+
+    private void btnTimActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTimActionPerformed
+        // TODO add your handling code here:
+        String s = txtSeriT.getText().trim().equals("") ? null : txtSeriT.getText().trim();
+        lstSP = productDAO.getlist(rdoTC.isSelected(), s);
+        fillTable();
+    }//GEN-LAST:event_btnTimActionPerformed
+
+    private void txtSeriTKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSeriTKeyReleased
+        // TODO add your handling code here:
+        String s = txtSeriT.getText().trim().equals("") ? null : txtSeriT.getText().trim();
+        lstSP = productDAO.getlist(rdoTC.isSelected(), s);
+        fillTable();
+    }//GEN-LAST:event_txtSeriTKeyReleased
+
+    private void btnXCTSPActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnXCTSPActionPerformed
+        // TODO add your handling code here:
+        change();
+    }//GEN-LAST:event_btnXCTSPActionPerformed
+
+    private void tblMMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblMMouseClicked
+        // TODO add your handling code here:
+        row = tblM.getSelectedRow();
+        if (row >= 0) {
+            showDetail();
+        }
+    }//GEN-LAST:event_tblMMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -328,14 +466,12 @@ public class TDTT extends javax.swing.JPanel {
     private javax.swing.JButton btnEndSP;
     private javax.swing.JButton btnGoSP;
     private javax.swing.JButton btnHomeSP;
-    private javax.swing.JButton btnLuu;
     private javax.swing.JButton btnNextSP;
     private javax.swing.JButton btnTim;
     private javax.swing.JButton btnXCTSP;
-    private javax.swing.JComboBox<String> cboK;
-    private javax.swing.JComboBox<String> cboTT;
-    private javax.swing.JCheckBox chkDVT;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -347,9 +483,166 @@ public class TDTT extends javax.swing.JPanel {
     private javax.swing.JRadioButton rdoCB;
     private javax.swing.JRadioButton rdoTC;
     private javax.swing.JTable tblM;
+    private javax.swing.JTextField txtK;
     private javax.swing.JTextField txtPosSP;
     private javax.swing.JTextField txtSeri;
     private javax.swing.JTextField txtSeriT;
     private javax.swing.JTextField txtTM;
+    private javax.swing.JTextField txtTT;
     // End of variables declaration//GEN-END:variables
+
+    private void load() {
+        productDAO = new ProductDAO();
+        shelveDAO = new ShelveDAO();
+        model = (DefaultTableModel) tblM.getModel();
+        lstSP = productDAO.getlist(rdoTC.isSelected());
+        curPage = 1;
+        itemPerPage = 4;
+        fillTable();
+    }
+
+    private void fillTable() {
+        page = (int) Math.ceil(lstSP.size() / (double) itemPerPage);
+        start = curPage * itemPerPage - itemPerPage;
+        end = curPage * itemPerPage - 1;
+        if (end > lstSP.size() - 1) {
+            end = lstSP.size() - 1;
+        }
+        model.setRowCount(0);
+        if (lstSP.size() > 0) {
+            for (int i = start; i <= end; i++) {
+                model.addRow(new Object[]{
+                    false, lstSP.get(i).getSerial(),
+                    lstSP.get(i).getStat()});
+            }
+            txtPosSP.setText(String.valueOf(curPage));
+            lblPosSP.setText(String.valueOf(curPage) + "/" + String.valueOf(page));
+        } else {
+            txtPosSP.setText("");
+            lblPosSP.setText("");
+        }
+        model.fireTableDataChanged();
+        row = 0;
+        showDetail();
+    }
+
+    private void showDetail() {
+        if (lstSP.size() > 0) {
+            show = row + (curPage - 1) * itemPerPage;
+            txtSeri.setText(lstSP.get(show).getSerial());
+            txtTM.setText(new TypeDAO().getTypeName(lstSP.get(show).getType_id()));
+            switch (lstSP.get(show).getStat()) {
+                case "sansang":
+                    txtTT.setText("Sẵn sàng");
+                    break;
+                case "daban":
+                    txtTT.setText("Đã bán");
+                    break;
+                case "hong":
+                    txtTT.setText("Hỏng");
+                    break;
+                default:
+                    txtTT.setText("Đang làm mẫu");
+            }
+            txtK.setText(Helper.toShelveName(lstSP.get(show).getShel_id()));
+            tblM.setRowSelectionInterval(row, row);
+        }
+    }
+
+    private void change() {
+        lstC = new ArrayList<>();
+        for (int i = start; i <= end; i++) {
+            int row = (curPage - 1) * itemPerPage + i;
+            boolean sel = (boolean) model.getValueAt(row, 0);
+            if (sel && !lstSP.get(i).getStat().equals("daban")) {
+                lstC.add(lstSP.get(i));
+            }
+        }
+        if (lstC.size() > 0) {
+            JDialog c = new DTT((JFrame) this.getTopLevelAncestor(), true, lstC);
+            c.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent we) {
+                    load();
+                }
+
+            });
+            c.setVisible(true);
+        } else {
+            JOptionPane.showMessageDialog(this, "mời click chọn sản phẩm để sửa");
+        }
+    }
+}
+
+class CheckBoxHeader extends JCheckBox
+        implements TableCellRenderer, MouseListener {
+
+    protected CheckBoxHeader rendererComponent;
+    protected int column;
+    protected boolean mousePressed = false;
+
+    public CheckBoxHeader(ItemListener itemListener) {
+        rendererComponent = this;
+        rendererComponent.addItemListener(itemListener);
+    }
+
+    public Component getTableCellRendererComponent(
+            JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column) {
+        if (table != null) {
+            JTableHeader header = table.getTableHeader();
+            if (header != null) {
+//                rendererComponent.setForeground(header.getForeground());
+//                rendererComponent.setBackground(header.getBackground());
+//                rendererComponent.setFont(header.getFont());
+                header.addMouseListener(rendererComponent);
+            }
+        }
+        setColumn(column);
+//        rendererComponent.setText("Check All");
+        setHorizontalAlignment(CENTER);
+//        setBorder(UIManager.getBorder("TableHeader.cellBorder"));
+        return rendererComponent;
+    }
+
+    protected void setColumn(int column) {
+        this.column = column;
+    }
+
+    public int getColumn() {
+        return column;
+    }
+
+    protected void handleClickEvent(MouseEvent e) {
+        if (mousePressed) {
+            mousePressed = false;
+            JTableHeader header = (JTableHeader) (e.getSource());
+            JTable tableView = header.getTable();
+            TableColumnModel columnModel = tableView.getColumnModel();
+            int viewColumn = columnModel.getColumnIndexAtX(e.getX());
+            int column = tableView.convertColumnIndexToModel(viewColumn);
+
+            if (viewColumn == this.column && e.getClickCount() == 1 && column != -1) {
+                doClick();
+            }
+        }
+    }
+
+    public void mouseClicked(MouseEvent e) {
+        handleClickEvent(e);
+        ((JTableHeader) e.getSource()).repaint();
+    }
+
+    public void mousePressed(MouseEvent e) {
+        mousePressed = true;
+    }
+
+    public void mouseReleased(MouseEvent e) {
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
+    }
 }

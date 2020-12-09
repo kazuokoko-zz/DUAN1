@@ -3,9 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Git/DA1/code/QLNXK1/src/DAO/ImportDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/UI/XK.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/Model/Shelve.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/UI/TDTT.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/DAO/ShelveDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/DAO/TypeDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/Model/DTT.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/DAO/ProductDAO.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/UI/QLK.java</file>
+            <file>file:/D:/Git/DA1/code/QLNXK1/src/DAO/Export_DetailDAO.java</file>
             <file>file:/D:/Git/DA1/code/QLNXK1/src/UI/TK.java</file>
-            <file>file:/D:/Git/DA1/code/QLNXK1/src/DAO/ExportDAO.java</file>
         </group>
     </open-files>
 </project-private>
