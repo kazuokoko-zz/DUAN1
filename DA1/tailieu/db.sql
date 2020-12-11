@@ -167,8 +167,6 @@ create table COLOURS
 	constraint PK_COLOURS primary key (id)
 )
 
-alter table MEMORIES 
-alter column id int identity(1,1) not null
 
 insert into ACCOUNTS([user],pass,role,stat)
 values ('admin','admin','QL','AC')

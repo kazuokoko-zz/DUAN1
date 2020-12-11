@@ -16,10 +16,13 @@ import Model.Import;
 import Model.Import_Detail;
 import Model.Type;
 import UI.Main;
+import com.itextpdf.text.Chunk;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -107,6 +110,15 @@ public class Helper {
         ArrayList<Import_Detail> lst = new Import_DetailDAO().select(anImport.getIm_id());
         Document pdf = new Document();
         pdf.setMargins(25, 25, 25, 25);
+        Font fontData = new Font();
+        Font fontTitle = new Font();
+        Font fontHeader = new Font();
+        try {
+            fontData = new Font(BaseFont.createFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 11, Font.NORMAL);
+            fontTitle = new Font(BaseFont.createFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 25, Font.NORMAL);
+            fontHeader = new Font(BaseFont.createFont("C:\\Windows\\Fonts\\Arial.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED), 13, Font.NORMAL);
+        } catch (Exception e) {
+        }
         try {
             File dir = new File(System.getProperty("user.home") + "/appdata/local/QLXNK/");
             if (!dir.exists() || !dir.isDirectory()) {
@@ -118,33 +130,54 @@ public class Helper {
             }
             PdfWriter.getInstance(pdf, new FileOutputStream(f));
             pdf.open();
-            Paragraph p = new Paragraph(new Phrase("MHD: " + anImport.getIm_id()));
+            Paragraph p = new Paragraph("MHD: " + anImport.getIm_id(), fontHeader);
+            p.setAlignment(Element.ALIGN_CENTER);
             pdf.add(p);
-            p = new Paragraph(new Phrase("NCC: " + removeAccent(new SupplierDAO().select(anImport.getSup_id()).getSup_name())));
+            p = new Paragraph("NCC: " + removeAccent(new SupplierDAO().select(anImport.getSup_id()).getSup_name()), fontData);
+            p.setAlignment(Element.ALIGN_LEFT);
             pdf.add(p);
-            p = new Paragraph(new Phrase("Ngay: " + new SimpleDateFormat("dd-MM-yyyy").format(anImport.getIm_date())));
+            p = new Paragraph("Ngay: " + new SimpleDateFormat("dd-MM-yyyy").format(anImport.getIm_date()), fontData);
             pdf.add(p);
-            p = new Paragraph(new Phrase("Tao boi: " + anImport.getUser()));
+            p = new Paragraph("Tao boi: " + anImport.getUser(), fontData);
             pdf.add(p);
-            p = new Paragraph(new Phrase("Giao hang: " + anImport.getIm_deliver()));
+            p = new Paragraph("Giao hang: " + anImport.getIm_deliver(), fontData);
             pdf.add(p);
-            p = new Paragraph(new Phrase("Kiem tra: " + anImport.getIm_checker()));
+            p = new Paragraph("Kiem tra: " + anImport.getIm_checker(), fontData);
             pdf.add(p);
-            p = new Paragraph(new Phrase("----------------------"));
+            p = new Paragraph("----------------------", fontData);
+            p.setAlignment(Element.ALIGN_CENTER);
+            pdf.add(p);
+            p = new Paragraph(new Chunk(Chunk.NEWLINE));
+            p.setAlignment(Element.ALIGN_CENTER);
             pdf.add(p);
 
             PdfPTable tbl = new PdfPTable(3);
-            tbl.addCell(new PdfPCell(new Paragraph(Element.ALIGN_CENTER, "Ten dien thoai")));
-            tbl.addCell(new PdfPCell(new Paragraph(Element.ALIGN_CENTER, "So luong")));
-            tbl.addCell(new PdfPCell(new Paragraph(Element.ALIGN_CENTER, "Gia nhap")));
+            PdfPCell pc = new PdfPCell(new Paragraph("Ten dien thoai"));
+            pc.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tbl.addCell(pc);
+            pc = new PdfPCell(new Paragraph("So luong"));
+            pc.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tbl.addCell(pc);
+            pc = new PdfPCell(new Paragraph("Gia nhap"));
+            pc.setHorizontalAlignment(Element.ALIGN_CENTER);
+            tbl.addCell(pc);
             for (Import_Detail import_Detail : lst) {
                 tbl.addCell(new PdfPCell(new Paragraph(Element.ALIGN_RIGHT, removeAccent(new TypeDAO().select(new Type(import_Detail.getType_id(), "", "")).getType_name()))));
-                tbl.addCell(new PdfPCell(new Paragraph(Element.ALIGN_RIGHT, removeAccent(String.valueOf(import_Detail.getImd_amount())))));
-                tbl.addCell(new PdfPCell(new Paragraph(Element.ALIGN_RIGHT, removeAccent(new DecimalFormat("#").format(import_Detail.getImd_price())))));
+                pc = new PdfPCell(new Paragraph(Element.ALIGN_RIGHT, removeAccent(String.valueOf(import_Detail.getImd_amount()))));
+                pc.setHorizontalAlignment(Element.ALIGN_CENTER);
+                tbl.addCell(pc);
+                pc = new PdfPCell(new Paragraph(Element.ALIGN_RIGHT, removeAccent(new DecimalFormat("#").format(import_Detail.getImd_price()))));
+                pc.setHorizontalAlignment(Element.ALIGN_CENTER);
+                tbl.addCell(pc);
             }
             pdf.add(tbl);
+            p = new Paragraph(new Chunk(Chunk.NEWLINE));
+            p.setAlignment(Element.ALIGN_CENTER);
             pdf.add(p);
-            p = new Paragraph(new Phrase("Tong tien: " + new DecimalFormat("#").format(anImport.getIm_sum_price())));
+            p = new Paragraph("----------------------", fontData);
+            pdf.add(p);
+            p = new Paragraph("Tong tien: " + new DecimalFormat("#").format(anImport.getIm_sum_price()), fontData);
+            p.setAlignment(Element.ALIGN_LEFT);
             pdf.add(p);
 
             pdf.close();

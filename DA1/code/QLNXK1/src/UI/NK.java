@@ -1092,7 +1092,6 @@ public class NK extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private void setNKComponentState(String state) {
-        jdtNN.getDateEditor().setEnabled(false);
         btnHuy.setVisible(!areadyAdd && !inState.equals("N"));
         txtNT.setText(anImport == null ? Main.account.getUser() : anImport.getUser());
         btnIn.setVisible(!inState.equals("N"));
@@ -1146,6 +1145,7 @@ public class NK extends javax.swing.JPanel {
                 btnXN.setVisible(false);
                 break;
         }
+        jdtNN.getDateEditor().setEnabled(false);
 
     }
 
